@@ -12,7 +12,7 @@ tags:
 heroImage: /images/best-mint-budget-app-alternative.jpg
 heroImageAlt: "Title card reading “Best mint budget app alternative” set in white on a dark green gradient with concentric circle motifs"
 author: "The HeyBlog Desk"
-draft: true
+draft: false
 sourceTopicId: topic_175
 ---
 
