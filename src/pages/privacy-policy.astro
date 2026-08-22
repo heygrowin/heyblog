@@ -1,0 +1,237 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { SITE } from '../config';
+
+const lastUpdated = '22 August 2026';
+---
+
+<!-- Starting draft — must be reviewed by a qualified professional before the site accepts real traffic. -->
+{/*
+  TODO — YOU MUST FILL THESE IN YOURSELF. I have not invented any of them:
+    1. Legal/business name of the operator (sole proprietor name is fine in India)
+    2. A real postal address for correspondence
+    3. A working contact email (set SITE.legal.privacyEmail in src/config.ts)
+    4. Whether a Data Protection Officer / DPDP "Data Protection Officer" or
+       "Consent Manager" is required for you — most small publishers are NOT
+       Significant Data Fiduciaries under the DPDP Act and do not need one, but
+       confirm this rather than assuming.
+    5. Confirm the AdSense publisher ID once approved, and name it below.
+    6. If you add any email newsletter provider, name it and its location here.
+*/}
+
+<PageLayout
+  title="Privacy Policy"
+  description={`How ${SITE.name} handles personal data, cookies and third-party advertising.`}
+  path="/privacy-policy"
+  subtitle="What is collected, who collects it, and how to opt out."
+  updated={lastUpdated}
+>
+  <p>
+    This policy explains how {SITE.legal.entityName} ("we", "us") handles information
+    when you visit {SITE.url}. It describes what this site actually does — not a
+    generic template. The site is operated from India and is read worldwide,
+    including in the EU, the UK and the United States.
+  </p>
+
+  <h2>The short version</h2>
+
+  <ul>
+    <li>There is no account system. You are never asked to identify yourself to read.</li>
+    <li><strong>We set no cookies of our own.</strong></li>
+    <li>We do not sell or share personal information for money.</li>
+    <li>
+      Our analytics is cookieless and reports only aggregate numbers — it cannot
+      identify you.
+    </li>
+    <li>
+      Advertising is served by Google and <strong>does</strong> use cookies. That part
+      is described in detail below, and it is the only part that involves tracking.
+    </li>
+  </ul>
+
+  <h2>What we collect ourselves</h2>
+
+  <h3>Nothing you type, unless you send it</h3>
+
+  <p>
+    The site is a set of static files. It runs no code of its own on a server when you
+    visit, and it has no database. If a newsletter signup form is active and you use
+    it, the address you enter goes to our email provider and is used only to send that
+    newsletter; every issue carries a one-click unsubscribe link.
+  </p>
+
+  <h3>Analytics — Cloudflare Web Analytics</h3>
+
+  <p>
+    We use Cloudflare Web Analytics to see which articles are read and how quickly
+    pages load. It is <strong>cookieless</strong>: it stores nothing on your device,
+    sets no identifier, and does not track you between sites or between visits. It
+    reports aggregate counts — page views, referrer, country, browser family, and page
+    speed measurements. We cannot single you out from it, and neither can we link it
+    to anything else.
+  </p>
+
+  <h3>Hosting logs — Cloudflare Pages</h3>
+
+  <p>
+    The site is hosted on Cloudflare Pages. As part of delivering pages and protecting
+    the service from abuse, Cloudflare processes standard technical information
+    including your IP address, user agent, the URL requested and a timestamp. This is
+    ordinary server logging performed by our host, retained by them for a limited
+    period under their own policies.
+  </p>
+
+  <h2>Advertising — Google AdSense</h2>
+
+  <p>
+    This site is funded by advertising served through Google AdSense. This is the only
+    part of the site that involves cookies and tracking, and it is worth reading
+    carefully.
+  </p>
+
+  <ul>
+    <li>
+      Google and its advertising partners use cookies and similar technologies to
+      serve ads, measure whether they were seen or clicked, and — depending on your
+      consent and your location — to show ads based on your interests and your prior
+      visits to this and other websites.
+    </li>
+    <li>
+      Third-party vendors, including Google, use the <strong>DoubleClick</strong>
+      cookie and comparable identifiers for this purpose.
+    </li>
+    <li>
+      <strong>We never receive, store, or have access to the personal data these
+      networks collect.</strong> We see only aggregate earnings and performance
+      figures. Their handling of that data is governed by their policies, not by this
+      one.
+    </li>
+    <li>
+      If you are in the EEA, the UK or Switzerland, you will be shown a consent
+      request before personalised advertising cookies are set. That request is
+      operated by Google's certified Consent Management Platform. Your choice is
+      recorded and you can change it at any time through the same interface.
+    </li>
+  </ul>
+
+  <p>
+    Full detail on how Google uses information from sites that use its services is at
+    <a href="https://policies.google.com/technologies/partner-sites" rel="noopener">
+      policies.google.com/technologies/partner-sites</a>.
+  </p>
+
+  <h2>How to opt out of personalised ads</h2>
+
+  <ul>
+    <li>
+      Turn off ad personalisation for your Google account at
+      <a href="https://myadcenter.google.com/" rel="noopener">myadcenter.google.com</a>
+      or <a href="https://www.google.com/settings/ads" rel="noopener">google.com/settings/ads</a>.
+    </li>
+    <li>
+      Opt out of third-party vendor cookies via
+      <a href="https://optout.aboutads.info/" rel="noopener">optout.aboutads.info</a>,
+      <a href="https://optout.networkadvertising.org/" rel="noopener">optout.networkadvertising.org</a>,
+      or <a href="https://www.youronlinechoices.eu/" rel="noopener">youronlinechoices.eu</a> in Europe.
+    </li>
+    <li>If you are in the EEA or UK, revisit the consent prompt to withdraw consent.</li>
+    <li>Block or delete cookies in your browser settings at any time.</li>
+  </ul>
+
+  <p>
+    Opting out stops ads being <em>personalised</em>. It does not remove ads, and
+    non-personalised ads may still use limited data for frequency capping and fraud
+    prevention.
+  </p>
+
+  <h2>Local storage — your theme choice</h2>
+
+  <p>
+    The site stores two values in your browser's local storage: your light/dark mode
+    preference and your chosen accent colour. These exist so the page does not flash
+    the wrong colours on your next visit. They never leave your device, are not
+    cookies, are never sent to us, and clearing your site data removes them.
+  </p>
+
+  <h2>Your rights</h2>
+
+  <h3>If you are in the EU or the UK (GDPR / UK GDPR)</h3>
+
+  <p>
+    Our legal bases are <strong>consent</strong> for personalised advertising cookies
+    and for the newsletter, and <strong>legitimate interests</strong> for operating,
+    securing and measuring the site in aggregate. You have the right to access,
+    rectify, erase, restrict and object to processing, the right to data portability,
+    and the right to withdraw consent at any time. You may also lodge a complaint with
+    your national supervisory authority.
+  </p>
+
+  <p>
+    In practice we hold almost nothing about you directly — most requests concerning
+    advertising data must go to Google, since they are the party that holds it.
+  </p>
+
+  <h3>If you are in India (DPDP Act 2023)</h3>
+
+  <p>
+    Under the Digital Personal Data Protection Act, 2023 you have the right to access
+    a summary of your personal data being processed, to correct or complete it, to
+    erase it, to nominate another person to exercise your rights, and to a grievance
+    redressal process. Where we rely on your consent, you may withdraw it as easily as
+    you gave it. Send grievances to the contact address below; we will respond within
+    the period the Act requires.
+  </p>
+
+  <h3>If you are in California (CCPA/CPRA)</h3>
+
+  <p>
+    You have the right to know what personal information is collected and to request
+    its deletion. We do not sell personal information for money. Advertising cookies
+    may constitute "sharing" for cross-context behavioural advertising; use the opt-out
+    links above to stop it.
+  </p>
+
+  <h2>Retention</h2>
+
+  <p>
+    We hold no personal data ourselves other than a newsletter address, if you give
+    one, which is kept until you unsubscribe. Analytics is aggregate and retains no
+    identifiers. Hosting logs are retained by Cloudflare under their policy.
+    Advertising data is retained by Google under theirs.
+  </p>
+
+  <h2>International transfers</h2>
+
+  <p>
+    We are based in India; our hosting, analytics and advertising providers process
+    data in the United States and elsewhere. Where transfers out of the EEA or UK are
+    involved, those providers rely on their own safeguards, typically Standard
+    Contractual Clauses.
+  </p>
+
+  <h2>Children</h2>
+
+  <p>
+    This site is intended for adults and is not directed at children. We do not
+    knowingly collect personal data from children. Under the DPDP Act, processing
+    children's data requires verifiable parental consent, which we do not seek because
+    we do not target children. If you believe a child has provided information, contact
+    us and we will delete it.
+  </p>
+
+  <h2>Changes</h2>
+
+  <p>
+    We will update this page when what we do changes — in particular before adding any
+    new analytics, email or advertising provider. The date at the top is the date of
+    the most recent revision.
+  </p>
+
+  <h2>Contact</h2>
+
+  <p>
+    {SITE.legal.entityName}<br />
+    {SITE.legal.address}<br />
+    <a href={`mailto:${SITE.legal.privacyEmail}`}>{SITE.legal.privacyEmail}</a>
+  </p>
+</PageLayout>

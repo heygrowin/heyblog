@@ -1,0 +1,30 @@
+---
+import { SITE, MAIN_NAV } from '../config';
+import ThemePicker from './ThemePicker.astro';
+import { normalizePath } from '../lib/urls';
+
+const current = normalizePath(Astro.url.pathname);
+
+const isCurrent = (href: string) =>
+  href === '/' ? current === '/' : current === href || current.startsWith(`${href}/`);
+---
+
+<header class="site-header">
+  <div class="shell-wide site-header__inner">
+    <a class="masthead" href="/">{SITE.name}</a>
+
+    <nav class="site-nav" aria-label="Main">
+      {MAIN_NAV.map((item, index) => (
+        <a
+          href={item.href}
+          class={index > 0 ? 'site-nav__secondary' : undefined}
+          aria-current={isCurrent(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <ThemePicker />
+  </div>
+</header>

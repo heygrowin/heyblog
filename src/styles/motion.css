@@ -1,0 +1,110 @@
+/* ==========================================================================
+   Motion — CSS only. No library, no JS, no parallax.
+
+   The load-bearing rule in this file is the @supports guard around every
+   hidden initial state. Scroll-driven animations are the ONLY thing that can
+   reveal an element, so if the browser cannot run them the element must never
+   have been hidden in the first place. Both the hidden state and the animation
+   that undoes it live inside the same @supports block, so a browser without
+   support simply never sees either, and renders the content visible and static.
+   ========================================================================== */
+
+/* --- Cross-document view transitions -------------------------------------
+   The zero-JS route: no ClientRouter, no hydration, no runtime. Chromium
+   honours it today; everywhere else navigation is simply unanimated, which is
+   the correct fallback. */
+@view-transition {
+  navigation: auto;
+}
+
+/* --- Scroll reveal -------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      /* Longhands, deliberately. The `animation` shorthand resets
+         animation-duration to 0s, which silently kills a scroll-driven
+         animation: it completes instantly and never reveals anything.
+         Omitting duration entirely leaves it `auto`, which is what a view()
+         timeline requires. */
+      animation-name: reveal-rise;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      /* Finishes well before the element reaches the middle of the screen,
+         so nothing is still fading while it is being read. */
+      animation-range: entry 0% entry 42%;
+    }
+
+    /* Cards in a grid get a small stagger so a row does not snap in as a block. */
+    .reveal-group > *:nth-child(2) { animation-delay: 0ms; animation-range: entry 3% entry 45%; }
+    .reveal-group > *:nth-child(3) { animation-range: entry 6% entry 48%; }
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Hover / focus transitions -------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  a,
+  .button,
+  .pill,
+  .tag,
+  .category-card,
+  .pagination__link,
+  .signup__button,
+  .card__title a {
+    transition:
+      color 160ms ease,
+      background-color 160ms ease,
+      border-color 160ms ease,
+      text-decoration-color 160ms ease;
+  }
+
+  .card__media img {
+    transition: transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .card:hover .card__media img {
+    transform: scale(1.03);
+  }
+
+  .category-card {
+    transition:
+      border-color 180ms ease,
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+}
+
+/* --- Reduced motion: everything off --------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-group > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

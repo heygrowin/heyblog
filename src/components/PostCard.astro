@@ -1,0 +1,63 @@
+---
+import { Image } from 'astro:assets';
+import CategoryPill from './CategoryPill.astro';
+import PostMeta from './PostMeta.astro';
+import { resolveHeroImage } from '../lib/images';
+import { postPath } from '../lib/urls';
+import type { Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  /** Large lead-story treatment on the landing page. */
+  feature?: boolean;
+  /** Eager-load the image when the card is above the fold. */
+  priority?: boolean;
+  /** Heading level, so each page keeps a sane heading order. */
+  headingLevel?: 2 | 3;
+}
+
+const { post, feature = false, priority = false, headingLevel = 3 } = Astro.props;
+
+const hero = await resolveHeroImage(post.data.heroImage, post.data.slug);
+const href = postPath(post.data.slug);
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
+
+const widths = feature ? [400, 700, 1000] : [300, 500, 700];
+const sizes = feature
+  ? '(max-width: 899px) 100vw, 45vw'
+  : '(max-width: 699px) 100vw, (max-width: 1099px) 45vw, 30vw';
+---
+
+<article class="card reveal">
+  <a class="card__media" href={href} tabindex="-1" aria-hidden="true">
+    <Image
+      src={hero}
+      alt=""
+      widths={widths}
+      sizes={sizes}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+    />
+  </a>
+
+  <div class="card__body">
+    <CategoryPill category={post.data.category} />
+
+    <Heading class="card__title">
+      <a href={href}>{post.data.title}</a>
+    </Heading>
+
+    <p class="card__excerpt">{post.data.description}</p>
+
+    <PostMeta post={post} />
+  </div>
+</article>
+
+<style>
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2xs);
+  }
+</style>

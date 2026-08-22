@@ -1,0 +1,148 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { SITE } from '../config';
+
+const lastUpdated = '22 August 2026';
+---
+
+<!-- Starting draft — must be reviewed by a qualified professional before the site accepts real traffic. -->
+{/*
+  TODO — fill in yourself:
+    1. Legal/business name of the operator
+    2. Contact email (SITE.author.email in src/config.ts)
+    3. If/when you join an affiliate programme, activate the disclosure block
+       marked INACTIVE below and add the exact wording that programme requires
+       (Amazon Associates, for example, mandates specific language verbatim).
+*/}
+
+<PageLayout
+  title="Disclaimer"
+  description={`How ${SITE.name} produces its articles, and the limits of what they are.`}
+  path="/disclaimer"
+  subtitle="How these articles are made, and what they are not."
+  updated={lastUpdated}
+>
+  <h2>How our articles are produced</h2>
+
+  <p>
+    <strong>Articles on {SITE.name} are drafted with the assistance of artificial
+    intelligence and reviewed by a person before they are published.</strong> Nothing
+    publishes automatically.
+  </p>
+
+  <p>
+    We are explicit about this because you deserve to know how what you are reading was
+    made. In practice it means: research and a first draft are produced with AI tools,
+    then a human editor checks the claims, corrects what is wrong, removes what cannot
+    be supported, and decides whether the piece is worth publishing at all. Pieces that
+    do not survive that review are not published.
+  </p>
+
+  <p>
+    AI systems can state things confidently and be wrong. Human review reduces that
+    risk; it does not eliminate it. If you find an error, please
+    <a href="/contact">tell us</a> — we correct articles and change the update date at
+    the top rather than editing quietly.
+  </p>
+
+  <h2>General information only — not professional advice</h2>
+
+  <p>
+    Everything published here is general information and commentary. It is
+    <strong>not</strong> professional advice, and it is not tailored to your
+    circumstances. In particular, nothing on this site is:
+  </p>
+
+  <ul>
+    <li><strong>Medical advice.</strong> Nothing here diagnoses, treats or prevents any condition. Speak to a qualified clinician.</li>
+    <li><strong>Legal advice.</strong> Speak to a qualified lawyer in your jurisdiction.</li>
+    <li><strong>Financial, investment or tax advice.</strong> Speak to a qualified, licensed adviser who knows your situation.</li>
+  </ul>
+
+  <p>
+    No professional relationship of any kind is created by reading this site,
+    subscribing to a newsletter, or emailing us.
+  </p>
+
+  <h2>Information goes out of date</h2>
+
+  <p>
+    We write about fast-moving subjects. Prices change, free tiers disappear, features
+    ship and are withdrawn, and policies are rewritten with little notice. An article
+    reflects our understanding on the date it was written or last updated, and both
+    dates are shown at the top of every article so you can judge how current it is.
+  </p>
+
+  <p>
+    We make a genuine effort to verify facts against primary sources and to link to
+    them, but we give no warranty that any article is complete, current or free of
+    error. Verify anything you intend to rely on.
+  </p>
+
+  <h2>Advertising</h2>
+
+  <p>
+    This site is funded by advertising served through Google AdSense, which is what
+    keeps it free to read. Ads are labelled and kept out of the body of the article
+    itself. We do not choose which specific advertisers appear, and advertising has no
+    influence on what we write: advertisers get no advance notice of articles, cannot
+    request changes, and cannot buy coverage or a favourable review.
+  </p>
+
+  <h2>Affiliate links</h2>
+
+  {/*
+    INACTIVE — this site currently uses NO affiliate links. The disclosure below
+    is written and ready. When you join a programme: delete this comment, remove
+    the "not currently" paragraph, and publish the disclosure paragraph beneath
+    it. Add any verbatim wording your programme requires.
+  */}
+
+  <p>
+    <strong>This site does not currently use affiliate links.</strong> No article
+    contains a link that earns us a commission.
+  </p>
+
+  <p>
+    <em>
+      If that changes, this is the disclosure that will apply, and it will be shown
+      here and on any article that carries such a link: “Some links on this site are
+      affiliate links. If you follow one and buy something, we may earn a commission at
+      no additional cost to you. Affiliate relationships never determine whether we
+      recommend a product, and we recommend products we earn nothing from whenever they
+      are the better answer.”
+    </em>
+  </p>
+
+  <h2>Reviews and testing</h2>
+
+  <p>
+    Where we describe having tested something, we say what we tested, when, and on
+    what. Where a company has provided access, a trial or a review unit, we say so in
+    the article. Receiving access creates no obligation to publish and no obligation to
+    be positive.
+  </p>
+
+  <h2>External links</h2>
+
+  <p>
+    We link to sources and further reading. We do not control those sites and are not
+    responsible for their content, accuracy or privacy practices. A link is not an
+    endorsement.
+  </p>
+
+  <h2>Forward-looking statements</h2>
+
+  <p>
+    Articles sometimes discuss where a market or technology appears to be heading.
+    Those are opinions and informed guesses, not predictions to plan around, and they
+    are frequently wrong.
+  </p>
+
+  <h2>Contact</h2>
+
+  <p>
+    Questions about this disclaimer, or corrections to any article, go to
+    <a href={`mailto:${SITE.author.email}`}>{SITE.author.email}</a>.
+  </p>
+</PageLayout>

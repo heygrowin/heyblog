@@ -1,0 +1,29 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  subtitle?: string;
+  /** Rendered as "Last updated ..." under the title. Legal pages want this. */
+  updated?: string;
+  noindex?: boolean;
+}
+
+const { title, description, path, subtitle, updated, noindex } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} path={path} noindex={noindex}>
+  <div class="page-header shell-narrow">
+    <h1 class="page-title">{title}</h1>
+    {subtitle && <p class="page-subtitle">{subtitle}</p>}
+    {updated && <p class="page-updated">Last updated {updated}</p>}
+  </div>
+
+  <div class="shell-narrow">
+    <div class="prose">
+      <slot />
+    </div>
+  </div>
+</BaseLayout>

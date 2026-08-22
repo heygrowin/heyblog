@@ -1,0 +1,127 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getImage } from 'astro:assets';
+import { render } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CategoryPill from '../../components/CategoryPill.astro';
+import PostMeta from '../../components/PostMeta.astro';
+import HeroImage from '../../components/HeroImage.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import PostBody from '../../components/PostBody.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
+import EmailSignup from '../../components/EmailSignup.astro';
+import JsonLd from '../../components/JsonLd.astro';
+
+import { SITE, getCategory } from '../../config';
+import { getVisiblePosts, getRelatedPosts } from '../../lib/posts';
+import { resolveHeroImage } from '../../lib/images';
+import { postPath } from '../../lib/urls';
+import { articleSchema, postBreadcrumbSchema, faqSchema } from '../../lib/schema-org';
+
+export const getStaticPaths = (async () => {
+  const posts = await getVisiblePosts();
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+const { post } = Astro.props;
+
+const allPosts = await getVisiblePosts();
+const related = getRelatedPosts(post, allPosts);
+const { headings } = await render(post);
+
+const html = post.rendered?.html;
+if (html === undefined) {
+  throw new Error(
+    `No rendered HTML for post "${post.data.slug}". Try deleting .astro/ and rebuilding.`,
+  );
+}
+
+/* Purpose-built 1200x630 JPEG for social cards — crawlers are unreliable with
+   AVIF/WebP, so the OG image stays a plain JPEG even though the page does not. */
+const hero = await resolveHeroImage(post.data.heroImage, post.data.slug);
+const ogImage = await getImage({
+  src: hero,
+  width: 1200,
+  height: 630,
+  format: 'jpeg',
+  fit: 'cover',
+  quality: 82,
+});
+const ogImageUrl = new URL(ogImage.src, SITE.url).href;
+
+const category = getCategory(post.data.category);
+const path = postPath(post.data.slug);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  path={path}
+  ogType="article"
+  ogImage={ogImageUrl}
+  ogImageAlt={post.data.heroImageAlt}
+  publishedTime={post.data.publishDate}
+  modifiedTime={post.data.updatedDate ?? post.data.publishDate}
+  author={post.data.author}
+  section={category?.name}
+  tags={post.data.tags}
+  noindex={post.data.draft}
+>
+  <Fragment slot="head">
+    <JsonLd schema={articleSchema(post, ogImageUrl)} />
+    <JsonLd schema={postBreadcrumbSchema(post)} />
+    {post.data.faq && <JsonLd schema={faqSchema(post.data.faq)} />}
+  </Fragment>
+
+  <article class="post">
+    <header class="post-header shell-wide">
+      <div class="post-header__inner">
+        <CategoryPill category={post.data.category} />
+        <h1 class="post-title">{post.data.title}</h1>
+        <p class="post-standfirst">{post.data.description}</p>
+        <PostMeta post={post} showAuthor showUpdated />
+      </div>
+    </header>
+
+    <div class="shell-wide">
+      <HeroImage src={post.data.heroImage} alt={post.data.heroImageAlt} slug={post.data.slug} />
+    </div>
+
+    <div class="post-grid shell-wide">
+      <div class="post-grid__toc">
+        <TableOfContents headings={headings} />
+      </div>
+
+      <div class="post-grid__main">
+        <PostBody html={html} />
+
+        {post.data.faq && <FaqBlock faq={post.data.faq} />}
+
+        {post.data.tags.length > 0 && (
+          <footer class="post-footer">
+            <h2 class="eyebrow" id="tags-heading">Filed under</h2>
+            <ul class="tag-list" aria-labelledby="tags-heading" style="margin-top: var(--space-2xs);">
+              {post.data.tags.map((tag) => <li><span class="tag">#{tag}</span></li>)}
+            </ul>
+          </footer>
+        )}
+      </div>
+
+      <div class="post-grid__aside">
+        <AdSlot placement="sidebar" id="post-sidebar" />
+      </div>
+    </div>
+  </article>
+
+  <RelatedPosts posts={related} />
+
+  <div class="section shell">
+    <EmailSignup compact headingLevel={2} />
+  </div>
+</BaseLayout>

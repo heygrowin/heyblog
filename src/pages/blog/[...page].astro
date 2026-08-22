@@ -1,0 +1,69 @@
+---
+import type { GetStaticPaths } from 'astro';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import Pagination from '../../components/Pagination.astro';
+import EmailSignup from '../../components/EmailSignup.astro';
+import JsonLd from '../../components/JsonLd.astro';
+
+import { SITE } from '../../config';
+import { getVisiblePosts } from '../../lib/posts';
+import { collectionPageSchema } from '../../lib/schema-org';
+import { paginatedPath } from '../../lib/urls';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getVisiblePosts();
+  return paginate(posts, { pageSize: SITE.postsPerPage });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+
+const path = paginatedPath('/blog', page.currentPage);
+const title = page.currentPage === 1 ? 'All articles' : `All articles — page ${page.currentPage}`;
+const description =
+  page.currentPage === 1
+    ? `Every article from ${SITE.name}: ${SITE.tagline}`
+    : `Page ${page.currentPage} of the ${SITE.name} archive.`;
+---
+
+<BaseLayout title={title} description={description} path={path}>
+  <Fragment slot="head">
+    {/* Page 2+ is a continuation of the same collection — only page 1 is worth indexing as such. */}
+    {page.currentPage === 1 && (
+      <JsonLd schema={collectionPageSchema('All articles', description, '/blog')} />
+    )}
+  </Fragment>
+
+  <div class="page-header shell">
+    <h1 class="page-title">Articles</h1>
+    <p class="page-subtitle">
+      {page.total} {page.total === 1 ? 'article' : 'articles'}, newest first.
+    </p>
+  </div>
+
+  <div class="shell">
+    {page.data.length === 0 ? (
+      <p class="lead">No articles have been published yet.</p>
+    ) : (
+      <ul class="post-list">
+        {page.data.map((post, index) => (
+          <li>
+            <PostCard post={post} headingLevel={2} priority={page.currentPage === 1 && index < 3} />
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <Pagination
+      currentPage={page.currentPage}
+      lastPage={page.lastPage}
+      prevUrl={page.url.prev}
+      nextUrl={page.url.next}
+    />
+  </div>
+
+  <div class="section shell">
+    <EmailSignup compact />
+  </div>
+</BaseLayout>

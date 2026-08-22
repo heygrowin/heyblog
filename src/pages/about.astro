@@ -1,0 +1,113 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import EmailSignup from '../components/EmailSignup.astro';
+import { SITE, CATEGORIES } from '../config';
+---
+
+<!-- Starting draft — must be reviewed by a qualified professional before the site accepts real traffic. -->
+{/* TODO — fill in yourself: operator name, and whether you want a named editor byline. */}
+
+<PageLayout
+  title={`About ${SITE.name}`}
+  description={`What ${SITE.name} covers, how topics are chosen, and how articles are written and reviewed.`}
+  path="/about"
+  subtitle={SITE.mission}
+>
+  <h2>What this site is for</h2>
+
+  <p>
+    Every week brings another tool release, another pricing change, another platform
+    policy update. Most of it does not matter. A small amount of it changes how you
+    work, what you pay, or who pays you — and that part is usually buried in a
+    changelog nobody reads.
+  </p>
+
+  <p>
+    {SITE.name} exists to separate those two piles, so that {SITE.audience} can spend
+    their attention on the handful of changes that actually warrant it.
+  </p>
+
+  <h2>What we cover</h2>
+
+  <ul>
+    {CATEGORIES.map((category) => (
+      <li><strong>{category.name}</strong> — {category.blurb}</li>
+    ))}
+  </ul>
+
+  <h2>How topics are chosen</h2>
+
+  <p>
+    Topics are selected by tracking what people in these fields are actually searching
+    for and discussing, then filtering that list down to subjects where a careful piece
+    of writing would genuinely help someone make a decision. We deliberately skip
+    anything that cannot be made useful — breaking news, celebrity, politics, and
+    stories whose only value is being first.
+  </p>
+
+  <p>
+    If a change does not affect what something costs, what it can do, or who is allowed
+    to use it, it usually does not get an article.
+  </p>
+
+  <h2>How articles are written and reviewed</h2>
+
+  <p>
+    We will be direct about this, because you should know how what you are reading was
+    made.
+  </p>
+
+  <p>
+    <strong>Articles are drafted with the assistance of AI tools and then reviewed by a
+    person before publishing.</strong> The process is: research and a first draft are
+    generated, then a human editor checks every factual claim that matters — prices,
+    dates, feature availability, policy terms — against primary sources, rewrites what
+    is weak, removes what cannot be supported, and links the sources so you can verify
+    them yourself. Drafts that do not survive that review are not published.
+  </p>
+
+  <p>
+    Nothing publishes automatically. We think AI is a legitimate tool for research and
+    drafting, and a poor substitute for judgement about what is true and what is worth
+    saying. The <a href="/disclaimer">disclaimer</a> sets out what this means for how
+    much weight to put on any given article.
+  </p>
+
+  <h2>Corrections</h2>
+
+  <p>
+    We get things wrong sometimes. When we do, we correct the article and change the
+    update date shown at the top, rather than editing quietly. If you spot an error,
+    <a href="/contact">tell us</a> and we will fix it.
+  </p>
+
+  <h2>How this site makes money</h2>
+
+  <p>
+    {SITE.name} is free to read and funded by advertising through Google AdSense. We do
+    not accept payment for coverage, we do not let advertisers see articles before
+    publication, and an advertising relationship never affects whether or how we write
+    about something. The site currently uses no affiliate links; if that changes it
+    will be disclosed on the <a href="/disclaimer">disclaimer</a> page and on any
+    article carrying one.
+  </p>
+
+  <h2>Who is behind it</h2>
+
+  <p>
+    {SITE.name} is published by {SITE.legal.entityName}, an independent operation based
+    in India. Editorial questions, corrections and press enquiries all go to
+    <a href="/contact">the contact page</a>, which reaches a person.
+  </p>
+
+  <h2>Staying in touch</h2>
+
+  <p>
+    The weekly email is the best way to follow along. You can also subscribe by
+    <a href="/rss.xml">RSS</a>.
+  </p>
+</PageLayout>
+
+<div class="section shell">
+  <EmailSignup compact />
+</div>

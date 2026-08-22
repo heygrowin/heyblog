@@ -1,0 +1,29 @@
+---
+import { Picture } from 'astro:assets';
+import { resolveHeroImage } from '../lib/images';
+
+interface Props {
+  src: string;
+  alt: string;
+  slug: string;
+}
+
+const { src, alt, slug } = Astro.props;
+const image = await resolveHeroImage(src, slug);
+---
+
+{/* The LCP element on a post page: eager, high priority, AVIF first, and
+    intrinsic width/height emitted by Astro so it reserves its own space. */}
+<figure class="post-hero">
+  <Picture
+    src={image}
+    alt={alt}
+    formats={['avif', 'webp']}
+    fallbackFormat="jpeg"
+    widths={[480, 800, 1200, 1600]}
+    sizes="(max-width: 767px) 100vw, (max-width: 1399px) 90vw, 1200px"
+    loading="eager"
+    fetchpriority="high"
+    decoding="sync"
+  />
+</figure>

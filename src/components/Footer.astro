@@ -1,0 +1,56 @@
+---
+import { SITE, CATEGORIES, FOOTER_NAV } from '../config';
+import { categoryPath } from '../lib/urls';
+
+const year = new Date().getFullYear();
+const copyrightRange = year > SITE.foundingYear ? `${SITE.foundingYear}–${year}` : `${year}`;
+
+const socialLinks = [
+  { label: 'X', url: SITE.social.x },
+  { label: 'YouTube', url: SITE.social.youtube },
+  { label: 'LinkedIn', url: SITE.social.linkedin },
+  { label: 'GitHub', url: SITE.social.github },
+].filter((link) => link.url !== '');
+---
+
+<footer class="site-footer">
+  <div class="shell-wide">
+    <div class="site-footer__grid">
+      <div>
+        <span class="site-footer__brand">{SITE.name}</span>
+        <p class="site-footer__blurb">{SITE.tagline}</p>
+
+        {socialLinks.length > 0 && (
+          <ul style="display: flex; gap: var(--space-s); margin-top: var(--space-s);">
+            {socialLinks.map((link) => (
+              <li><a href={link.url} rel="me noopener">{link.label}</a></li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <nav aria-labelledby="footer-sections">
+        <h2 id="footer-sections">Sections</h2>
+        <ul>
+          {CATEGORIES.map((category) => (
+            <li><a href={categoryPath(category.id)}>{category.name}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav aria-labelledby="footer-site">
+        <h2 id="footer-site">Site</h2>
+        <ul>
+          {FOOTER_NAV.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="site-footer__legal">
+      <span>© {copyrightRange} {SITE.name}. All rights reserved.</span>
+      <span>Independent and reader-supported.</span>
+    </div>
+  </div>
+</footer>

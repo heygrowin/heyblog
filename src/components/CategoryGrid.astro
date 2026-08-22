@@ -1,0 +1,22 @@
+---
+import { CATEGORIES } from '../config';
+import { categoryPath } from '../lib/urls';
+
+interface Props {
+  counts: Record<string, number>;
+}
+
+const { counts } = Astro.props;
+---
+
+<div class="category-grid reveal-group">
+  {CATEGORIES.map((category) => (
+    <a class="category-card reveal" href={categoryPath(category.id)}>
+      <span class="category-card__name">{category.name}</span>
+      <span class="category-card__blurb">{category.blurb}</span>
+      <span class="category-card__count">
+        {counts[category.id] ?? 0} {(counts[category.id] ?? 0) === 1 ? 'article' : 'articles'} →
+      </span>
+    </a>
+  ))}
+</div>

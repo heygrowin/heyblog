@@ -1,0 +1,75 @@
+---
+import { SITE } from '../config';
+
+interface Props {
+  /** Tighter treatment for the end of a post. */
+  compact?: boolean;
+  headingLevel?: 2 | 3;
+}
+
+const { compact = false, headingLevel = 2 } = Astro.props;
+const { endpoint, fieldName, heading, blurb, cta, reassurance } = SITE.email;
+
+/* One configurable constant decides whether this form is live. While the
+   endpoint is empty the UI renders complete but inert, rather than pretending
+   to accept an address it would silently drop. */
+const isConfigured = endpoint !== '';
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
+
+/* rel is valid on <form> per the HTML spec but is missing from Astro's
+   FormHTMLAttributes, so it is spread in rather than dropped — the endpoint is
+   third-party and should not get a handle on this window. */
+const formRel: Record<string, string> = { rel: 'noopener' };
+---
+
+<section class={`signup${compact ? ' signup--compact' : ''}`} aria-labelledby="signup-heading">
+  <div class="signup__inner">
+    <Heading class="signup__heading" id="signup-heading">{heading}</Heading>
+    <p class="signup__blurb">{blurb}</p>
+
+    <form
+      class="signup__form"
+      method="post"
+      action={isConfigured ? endpoint : undefined}
+      target="_blank"
+      {...formRel}
+    >
+      <label class="visually-hidden" for="signup-email">Email address</label>
+      <input
+        class="signup__input"
+        id="signup-email"
+        type="email"
+        name={fieldName}
+        placeholder="you@example.com"
+        autocomplete="email"
+        required
+        disabled={!isConfigured}
+      />
+      <button class="signup__button" type="submit" disabled={!isConfigured}>
+        {isConfigured ? cta : 'Opening soon'}
+      </button>
+    </form>
+
+    <p class="signup__note">
+      {isConfigured
+        ? reassurance
+        : 'The list opens shortly — signups are not being collected yet.'}
+    </p>
+
+    {!isConfigured && import.meta.env.DEV && (
+      <p class="signup__note signup__note--dev">
+        Set <code>SITE.email.endpoint</code> in src/config.ts to activate this form.
+      </p>
+    )}
+  </div>
+</section>
+
+<style>
+  .signup--compact {
+    padding-block: var(--space-xl);
+  }
+
+  .signup__note--dev {
+    color: var(--accent);
+  }
+</style>

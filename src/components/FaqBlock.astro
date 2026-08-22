@@ -1,0 +1,20 @@
+---
+interface Props {
+  faq: ReadonlyArray<{ question: string; answer: string }>;
+}
+
+const { faq } = Astro.props;
+---
+
+{/* Visible content and FAQPage JSON-LD are generated from the same frontmatter,
+    which is what Google requires: no schema for content a reader cannot see. */}
+<section class="faq" aria-labelledby="faq-heading">
+  <h2 id="faq-heading">Frequently asked questions</h2>
+
+  {faq.map((item) => (
+    <div class="faq__item">
+      <h3 class="faq__q">{item.question}</h3>
+      <p class="faq__a">{item.answer}</p>
+    </div>
+  ))}
+</section>

@@ -1,0 +1,118 @@
+---
+import { ACCENTS, SITE } from '../config';
+
+/**
+ * Two independent controls, both persisted in localStorage:
+ *   - mode   light / dark / system, cycled by one button
+ *   - accent four swatches inside a <details> popover
+ *
+ * The accent popover uses <details>, so opening and closing it costs no
+ * JavaScript at all. The only script here is the click handler that writes the
+ * two attributes and the two localStorage keys.
+ *
+ * The matching no-flash script lives in Head.astro and sets BOTH attributes
+ * before first paint.
+ */
+---
+
+<div class="theme-picker">
+  <button
+    type="button"
+    class="theme-btn"
+    data-mode-cycle
+    aria-live="polite"
+    title="Change colour mode"
+  >
+    <span class="visually-hidden" data-mode-label>Colour mode: system</span>
+    <svg class="i-system" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8M12 17v4"></path>
+    </svg>
+    <svg class="i-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+    </svg>
+    <svg class="i-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
+
+  <details class="accent-menu">
+    <summary class="theme-btn" title="Change accent colour" aria-label="Change accent colour">
+      <span class="accent-dot" aria-hidden="true"></span>
+    </summary>
+    <div class="accent-menu__panel" role="group" aria-label="Accent colour">
+      {ACCENTS.map((accent) => (
+        <button
+          type="button"
+          class="accent-swatch"
+          data-accent-set={accent.id}
+          data-accent={accent.id}
+          aria-pressed={accent.id === SITE.theme.defaultAccent ? 'true' : 'false'}
+        >
+          <span class="accent-swatch__dot" aria-hidden="true"></span>
+          <span>{accent.label}</span>
+        </button>
+      ))}
+    </div>
+  </details>
+</div>
+
+<script is:inline>
+  (function () {
+    var MODES = ['system', 'light', 'dark'];
+    var root = document.documentElement;
+
+    function currentMode() {
+      var m = root.getAttribute('data-mode');
+      return m === 'light' || m === 'dark' ? m : 'system';
+    }
+
+    function sync() {
+      var mode = currentMode();
+      var accent = root.getAttribute('data-accent') || 'emerald';
+      var label = document.querySelector('[data-mode-label]');
+      if (label) label.textContent = 'Colour mode: ' + mode + '. Activate to change.';
+      document.querySelectorAll('[data-accent-set]').forEach(function (b) {
+        b.setAttribute('aria-pressed', b.getAttribute('data-accent-set') === accent ? 'true' : 'false');
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t || !t.closest) return;
+
+      var cycle = t.closest('[data-mode-cycle]');
+      if (cycle) {
+        var next = MODES[(MODES.indexOf(currentMode()) + 1) % MODES.length];
+        if (next === 'system') root.removeAttribute('data-mode');
+        else root.setAttribute('data-mode', next);
+        try { localStorage.setItem('mode', next); } catch (err) {}
+        sync();
+        return;
+      }
+
+      var swatch = t.closest('[data-accent-set]');
+      if (swatch) {
+        var accent = swatch.getAttribute('data-accent-set');
+        root.setAttribute('data-accent', accent);
+        try { localStorage.setItem('accent', accent); } catch (err) {}
+        var menu = swatch.closest('details');
+        if (menu) menu.open = false;
+        sync();
+      }
+    });
+
+    // Close the accent popover on outside click or Escape.
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('details.accent-menu[open]').forEach(function (d) { d.open = false; });
+    });
+    document.addEventListener('pointerdown', function (e) {
+      document.querySelectorAll('details.accent-menu[open]').forEach(function (d) {
+        if (!d.contains(e.target)) d.open = false;
+      });
+    });
+
+    sync();
+  })();
+</script>

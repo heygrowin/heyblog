@@ -1,0 +1,67 @@
+---
+import { SITE } from '../config';
+import Head from '../components/Head.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/typography.css';
+import '../styles/layout.css';
+import '../styles/motion.css';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  author?: string;
+  section?: string;
+  tags?: readonly string[];
+  noindex?: boolean;
+  isHome?: boolean;
+}
+
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE.locale}>
+  <head>
+    <Head {...props} />
+    <slot name="head" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <Header />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    {/*
+      COOKIE CONSENT MOUNT POINT — intentionally empty.
+
+      No hand-rolled consent banner is shipped. Google's certified Consent
+      Management Platform is free inside AdSense and is switched on from the
+      AdSense dashboard at application time (Privacy & messaging -> GDPR/CCPA
+      messages). It injects itself and handles the EEA/UK consent flow, so a
+      second banner here would double-prompt and risk a policy violation.
+
+      Cloudflare Web Analytics is cookieless and is not covered by this.
+      If a self-hosted CMP is ever needed instead, mount it in this container.
+    */}
+    <div id="consent-mount" aria-hidden="true"></div>
+
+    <Analytics />
+  </body>
+</html>

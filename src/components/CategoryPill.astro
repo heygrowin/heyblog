@@ -1,0 +1,20 @@
+---
+import { getCategory } from '../config';
+import { categoryPath } from '../lib/urls';
+
+interface Props {
+  category: string;
+  /** Renders as plain text instead of a link (used inside another link). */
+  asLink?: boolean;
+}
+
+const { category, asLink = true } = Astro.props;
+const meta = getCategory(category);
+const label = meta?.name ?? category;
+---
+
+{asLink ? (
+  <a class="pill" href={categoryPath(category)}>{label}</a>
+) : (
+  <span class="pill">{label}</span>
+)}

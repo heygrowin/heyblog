@@ -1,0 +1,115 @@
+---
+import { SITE } from '../config';
+import { absoluteUrl } from '../lib/urls';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path only, e.g. "/blog/some-post". Canonical is derived from it. */
+  path: string;
+  /** Absolute URL. Falls back to the site default OG image. */
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  author?: string;
+  section?: string;
+  tags?: readonly string[];
+  noindex?: boolean;
+  /** Home page uses the bare site name rather than "Page · Site". */
+  isHome?: boolean;
+}
+
+const {
+  title,
+  description,
+  path,
+  ogImage,
+  ogImageAlt,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+  author,
+  section,
+  tags = [],
+  noindex = false,
+  isHome = false,
+} = Astro.props;
+
+const canonical = absoluteUrl(path);
+const documentTitle = isHome ? `${SITE.name} · ${SITE.tagline}` : `${title} · ${SITE.name}`;
+const image = ogImage ?? absoluteUrl(SITE.defaultOgImage);
+const imageAlt = ogImageAlt ?? `${SITE.name} — ${SITE.tagline}`;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+{/* Sets BOTH theme axes before first paint. Mode alone is not enough: a
+    stored non-default accent would otherwise flash emerald on every load. */}
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+    try {
+      var mode = localStorage.getItem('mode');
+      if (mode === 'light' || mode === 'dark') root.setAttribute('data-mode', mode);
+
+      var accent = localStorage.getItem('accent');
+      if (accent && /^(emerald|rose|indigo|amber)$/.test(accent)) {
+        root.setAttribute('data-accent', accent);
+      }
+    } catch (error) {
+      /* storage blocked (private mode, cookies off) — fall through to the
+         system preference and the default emerald accent */
+    }
+  })();
+</script>
+
+<title>{documentTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafbfa" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b100d" />
+
+{/* Self-hosted, same-origin, no third-party font request. Italic is not preloaded:
+    it is used only for emphasis and must not compete with the LCP element. */}
+<link rel="preload" href="/fonts/source-serif-4-var.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="alternate" type="application/rss+xml" title={`${SITE.name} — all articles`} href={absoluteUrl('/rss.xml')} />
+<link rel="sitemap" type="application/xml" href={absoluteUrl('/sitemap.xml')} />
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={image} />
+<meta property="og:image:alt" content={imageAlt} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content={SITE.ogLocale} />
+
+{ogType === 'article' && publishedTime && (
+  <meta property="article:published_time" content={publishedTime.toISOString()} />
+)}
+{ogType === 'article' && modifiedTime && (
+  <meta property="article:modified_time" content={modifiedTime.toISOString()} />
+)}
+{ogType === 'article' && author && <meta property="article:author" content={author} />}
+{ogType === 'article' && section && <meta property="article:section" content={section} />}
+{ogType === 'article' && tags.map((tag) => <meta property="article:tag" content={tag} />)}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+<meta name="twitter:image:alt" content={imageAlt} />
+{SITE.social.x && <meta name="twitter:site" content={SITE.social.x} />}
+
+<meta name="generator" content={Astro.generator} />

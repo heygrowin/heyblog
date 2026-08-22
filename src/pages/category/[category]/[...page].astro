@@ -1,0 +1,90 @@
+---
+import type { GetStaticPaths } from 'astro';
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PostCard from '../../../components/PostCard.astro';
+import Pagination from '../../../components/Pagination.astro';
+import EmailSignup from '../../../components/EmailSignup.astro';
+import JsonLd from '../../../components/JsonLd.astro';
+
+import { SITE, CATEGORIES } from '../../../config';
+import { getVisiblePosts } from '../../../lib/posts';
+import { collectionPageSchema, breadcrumbSchema } from '../../../lib/schema-org';
+import { categoryPath, paginatedPath } from '../../../lib/urls';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getVisiblePosts();
+
+  /* Every category gets an archive, even an empty one, so a link in the footer
+     or on the landing page can never 404. */
+  return CATEGORIES.flatMap((category) => {
+    const inCategory = posts.filter((post) => post.data.category === category.id);
+    return paginate(inCategory, {
+      params: { category: category.id },
+      props: { category },
+      pageSize: SITE.postsPerPage,
+    });
+  });
+}) satisfies GetStaticPaths;
+
+const { page, category } = Astro.props;
+
+const basePath = categoryPath(category.id);
+const path = paginatedPath(basePath, page.currentPage);
+const title =
+  page.currentPage === 1 ? category.name : `${category.name} — page ${page.currentPage}`;
+const description =
+  page.currentPage === 1
+    ? category.blurb
+    : `Page ${page.currentPage} of ${category.name} coverage from ${SITE.name}.`;
+---
+
+<BaseLayout title={title} description={description} path={path}>
+  <Fragment slot="head">
+    {page.currentPage === 1 && (
+      <>
+        <JsonLd schema={collectionPageSchema(category.name, category.blurb, basePath)} />
+        <JsonLd
+          schema={breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Articles', path: '/blog' },
+            { name: category.name, path: basePath },
+          ])}
+        />
+      </>
+    )}
+  </Fragment>
+
+  <div class="page-header shell">
+    <p class="eyebrow">Category</p>
+    <h1 class="page-title">{category.name}</h1>
+    <p class="page-subtitle">{category.blurb}</p>
+  </div>
+
+  <div class="shell">
+    {page.data.length === 0 ? (
+      <p class="lead">
+        Nothing here yet. <a href="/blog">Browse every article</a> instead.
+      </p>
+    ) : (
+      <ul class="post-list">
+        {page.data.map((post, index) => (
+          <li>
+            <PostCard post={post} headingLevel={2} priority={page.currentPage === 1 && index < 3} />
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <Pagination
+      currentPage={page.currentPage}
+      lastPage={page.lastPage}
+      prevUrl={page.url.prev}
+      nextUrl={page.url.next}
+    />
+  </div>
+
+  <div class="section shell">
+    <EmailSignup compact />
+  </div>
+</BaseLayout>

@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getVisiblePosts } from '../lib/posts';
+
+const recent = (await getVisiblePosts()).slice(0, 3);
+---
+
+<BaseLayout
+  title="Page not found"
+  description="That page does not exist. Browse the latest articles instead."
+  path="/404"
+  noindex
+>
+  <div class="error-page shell">
+    <p class="error-page__code">404</p>
+    <h1 class="error-page__title">That page does not exist</h1>
+    <p class="error-page__body">
+      The link may be out of date, or the address may have a typo in it. Everything we have
+      published is still one click away.
+    </p>
+
+    <div class="button-row">
+      <a class="button button--primary" href="/blog">Browse all articles</a>
+      <a class="button" href="/">Go to the front page</a>
+    </div>
+  </div>
+
+  {recent.length > 0 && (
+    <section class="section shell-wide" aria-labelledby="recent-heading">
+      <div class="section-head reveal">
+        <h2 id="recent-heading">Recently published</h2>
+      </div>
+      <div class="card-grid card-grid--3">
+        {recent.map((post) => <PostCard post={post} headingLevel={3} />)}
+      </div>
+    </section>
+  )}
+</BaseLayout>

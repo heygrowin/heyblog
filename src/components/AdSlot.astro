@@ -1,0 +1,37 @@
+---
+interface Props {
+  /** "inline" sits in the article flow; "sidebar" is the rail / end-of-post slot. */
+  placement: 'inline' | 'sidebar';
+  /** Identifies the position to whatever ad script is wired up later. */
+  id: string;
+}
+
+const { placement, id } = Astro.props;
+
+/* Off unless explicitly enabled. Inlined at build time by Vite. */
+const adsEnabled = import.meta.env.PUBLIC_ADS_ENABLED === 'true';
+const isDev = import.meta.env.DEV;
+---
+
+{/*
+  The height reservation is unconditional — it comes from CSS (--ad-h-inline /
+  --ad-h-sidebar) and applies whether or not ads are enabled. That is the whole
+  point: when a real ad script is wired up later it fills space that was already
+  occupied, so cumulative layout shift stays at zero.
+
+  No ad script is integrated yet. Enabling PUBLIC_ADS_ENABLED renders an empty
+  labelled container for one to target.
+*/}
+<aside
+  class={`ad-slot ad-slot--${placement}`}
+  data-ad-slot={id}
+  data-ad-placement={placement}
+  data-dev-outline={!adsEnabled && isDev ? 'true' : 'false'}
+  aria-hidden={adsEnabled ? undefined : 'true'}
+>
+  {adsEnabled && <span class="ad-slot__label">Advertisement</span>}
+  {adsEnabled && <div class="ad-slot__frame" data-ad-target={id}></div>}
+  {!adsEnabled && isDev && (
+    <span class="ad-slot__label">Ad slot · {id} · {placement} · reserved</span>
+  )}
+</aside>

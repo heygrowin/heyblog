@@ -1,0 +1,26 @@
+---
+import { SITE } from '../config';
+
+/**
+ * Cloudflare Web Analytics.
+ *
+ * Cookieless and identifier-free: it records page views and Core Web Vitals in
+ * aggregate and sets nothing on the visitor's device. That is why it needs no
+ * consent banner of its own — see the COOKIE CONSENT section of the README for
+ * the ads, which are a different question and are handled by Google's CMP.
+ *
+ * Loads only when a token is configured, and never in development, so local
+ * work is not recorded as real traffic.
+ */
+const token = SITE.analytics.cloudflareToken;
+const enabled = token !== '' && import.meta.env.PROD;
+---
+
+{enabled && (
+  <script
+    is:inline
+    defer
+    src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon={`{"token": "${token}"}`}
+  />
+)}

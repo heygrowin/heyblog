@@ -1,0 +1,87 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { SITE } from '../config';
+---
+
+<!-- Starting draft — must be reviewed by a qualified professional before the site accepts real traffic. -->
+{/*
+  TODO — YOU MUST SET A REAL, WORKING EMAIL ADDRESS.
+
+  Set SITE.author.email and SITE.legal.privacyEmail in src/config.ts. AdSense
+  review checks that a genuine contact method exists and that it works — a
+  placeholder address is a common reason for rejection. Send yourself a test
+  message from a different account before applying.
+
+  Also fill in a postal address below if you want one shown; it is not
+  mandatory for AdSense, but it does help the site read as a real operation.
+*/}
+
+<PageLayout
+  title="Contact"
+  description={`How to reach a person at ${SITE.name} — corrections, questions, advertising and press.`}
+  path="/contact"
+  subtitle="Corrections, questions, advertising and press — all reach a person."
+>
+  <h2>Email</h2>
+
+  <p>
+    Email is the way to reach us, and a person reads everything that arrives. We reply
+    to most messages within two to three working days.
+  </p>
+
+  <ul>
+    <li>
+      <strong>General, editorial and corrections</strong> —
+      <a href={`mailto:${SITE.author.email}`}>{SITE.author.email}</a>
+    </li>
+    <li>
+      <strong>Privacy, data and DPDP/GDPR requests</strong> —
+      <a href={`mailto:${SITE.legal.privacyEmail}`}>{SITE.legal.privacyEmail}</a>
+    </li>
+  </ul>
+
+  <h2>Corrections</h2>
+
+  <p>
+    If an article contains a factual error, tell us which article and which specific
+    claim is wrong, and link a source if you have one. Corrections are made promptly
+    and the article's update date is changed so readers can see it has been revised.
+    Given that our drafts are AI-assisted and human-reviewed, we take correction
+    reports seriously — they are how the review process gets better.
+  </p>
+
+  <h2>Advertising</h2>
+
+  <p>
+    Advertising on this site is sold through Google AdSense, not by us directly, so
+    there is no media kit to request. We do not sell sponsored posts, paid editorial
+    coverage, or links inside existing articles. If that is what you are looking for,
+    we are not the right fit, and we would rather say so immediately than waste your
+    time.
+  </p>
+
+  <h2>Press and product briefings</h2>
+
+  <p>
+    We are happy to receive product news, embargoed briefings and beta access. Doing so
+    creates no obligation to cover anything, and no obligation to cover it favourably.
+    Where a company has provided access or a review unit, we say so in the article.
+  </p>
+
+  <h2>What we cannot help with</h2>
+
+  <p>
+    We are a publication, not a support desk. We cannot recover your account, refund a
+    purchase, or troubleshoot a product on behalf of the company that makes it —
+    contact the vendor directly for any of those. We also do not provide personalised
+    medical, legal, financial or tax advice; see the
+    <a href="/disclaimer">disclaimer</a>.
+  </p>
+
+  <h2>Postal address</h2>
+
+  <p>
+    {SITE.legal.entityName}<br />
+    {SITE.legal.address}
+  </p>
+</PageLayout>

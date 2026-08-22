@@ -1,0 +1,182 @@
+/* ==========================================================================
+   .prose — the reading column
+   68ch, 19px, 1.7. This is the part of the site the whole design serves.
+   ========================================================================== */
+
+.prose {
+  max-width: var(--measure);
+  font-family: var(--font-serif);
+  font-size: var(--step-0);
+  line-height: var(--leading-body);
+  color: var(--text);
+}
+
+.prose > * + * {
+  margin-top: var(--paragraph-gap);
+}
+
+/* --- Headings ------------------------------------------------------------- */
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  /* Clears the sticky nothing — keeps anchor targets off the viewport edge. */
+  scroll-margin-top: var(--space-xl);
+}
+
+.prose h2 {
+  margin-top: 2em;
+  font-size: var(--step-3);
+  line-height: var(--leading-heading);
+}
+
+.prose h3 {
+  margin-top: 1.6em;
+  font-size: var(--step-2);
+}
+
+.prose h4 {
+  margin-top: 1.5em;
+  font-size: var(--step-1);
+  font-weight: var(--weight-semibold);
+}
+
+.prose h2 + *,
+.prose h3 + *,
+.prose h4 + * {
+  margin-top: 0.6em;
+}
+
+/* --- Inline --------------------------------------------------------------- */
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.prose a:hover {
+  text-decoration-color: currentColor;
+}
+
+.prose strong {
+  font-weight: var(--weight-bold);
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background-color: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.1em 0.32em;
+}
+
+/* --- Blocks --------------------------------------------------------------- */
+
+.prose ul,
+.prose ol {
+  padding-left: 1.35em;
+}
+
+.prose li + li {
+  margin-top: 0.5em;
+}
+
+.prose li::marker {
+  color: var(--text-muted);
+}
+
+.prose blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: var(--space-m);
+  border-left: 3px solid var(--accent);
+  font-size: var(--step-1);
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--text);
+}
+
+.prose blockquote p + p {
+  margin-top: 0.6em;
+}
+
+.prose pre {
+  padding: var(--space-s);
+  background-color: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  font-size: var(--step--1);
+  line-height: 1.55;
+}
+
+.prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
+.prose hr {
+  margin-block: var(--space-xl);
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.prose img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+}
+
+.prose figure figcaption {
+  margin-top: var(--space-2xs);
+  font-family: var(--font-sans);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+/* --- Tables --------------------------------------------------------------- */
+
+/* Wide tables scroll inside their own box; the page never scrolls sideways. */
+.prose .table-wrap,
+.prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.prose table {
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+.prose th,
+.prose td {
+  padding: var(--space-2xs) var(--space-s);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  font-weight: var(--weight-semibold);
+  border-bottom-color: var(--border-strong);
+  white-space: nowrap;
+}
+
+/* --- Lead paragraph ------------------------------------------------------- */
+
+.lead {
+  max-width: var(--measure);
+  font-family: var(--font-serif);
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--text-muted);
+}

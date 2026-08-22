@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import CategoryGrid from '../components/CategoryGrid.astro';
+import EmailSignup from '../components/EmailSignup.astro';
+import JsonLd from '../components/JsonLd.astro';
+
+import { SITE } from '../config';
+import { getVisiblePosts, countPostsByCategory } from '../lib/posts';
+import { landingPageSchema } from '../lib/schema-org';
+
+const posts = await getVisiblePosts();
+const featured = posts.slice(0, 3);
+const nextUp = posts.slice(3, 9);
+const counts = await countPostsByCategory();
+---
+
+<BaseLayout
+  title={SITE.name}
+  description={SITE.mission.slice(0, 160)}
+  path="/"
+  isHome
+>
+  <Fragment slot="head">
+    <JsonLd schema={landingPageSchema()} />
+  </Fragment>
+
+  {/* What this covers and who it helps — stated plainly, above everything else. */}
+  <section class="hero shell-wide" aria-labelledby="hero-heading">
+    <div class="hero__inner">
+      <p class="eyebrow">Independent · Reader-first</p>
+      <h1 class="hero__title" id="hero-heading">{SITE.tagline}</h1>
+    </div>
+    <p class="hero__mission">{SITE.mission}</p>
+    <p class="hero__mission" style="margin-top: var(--space-s);">
+      Written for <strong>{SITE.audience}</strong> who need to know what changed and
+      what to do about it — without reading twelve press releases first.
+    </p>
+  </section>
+
+  {featured.length > 0 && (
+    <section class="section shell-wide" aria-labelledby="latest-heading">
+      <div class="section-head reveal">
+        <h2 id="latest-heading">Latest</h2>
+        <a href="/blog">All articles →</a>
+      </div>
+
+      <div class="feature-grid">
+        {featured.map((post, index) => (
+          <PostCard post={post} feature headingLevel={3} priority={index === 0} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {/* Deliberately above the fold-ish and mid-page, not a footer afterthought:
+      the list is the asset that survives a ranking change. */}
+  <section class="section shell">
+    <EmailSignup />
+  </section>
+
+  <section class="section shell-wide" aria-labelledby="categories-heading">
+    <div class="section-head reveal">
+      <h2 id="categories-heading">What we cover</h2>
+    </div>
+    <CategoryGrid counts={counts} />
+  </section>
+
+  {nextUp.length > 0 && (
+    <section class="section shell-wide" aria-labelledby="more-heading">
+      <div class="section-head reveal">
+        <h2 id="more-heading">More recent coverage</h2>
+        <a href="/blog">Browse the archive →</a>
+      </div>
+
+      <ul class="post-list">
+        {nextUp.map((post) => (
+          <li><PostCard post={post} headingLevel={3} /></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {posts.length === 0 && (
+    <section class="section shell">
+      <p class="lead">
+        The first articles are on their way. <a href="/rss.xml">Subscribe to the feed</a> to
+        catch them.
+      </p>
+    </section>
+  )}
+</BaseLayout>

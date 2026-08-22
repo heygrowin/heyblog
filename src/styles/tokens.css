@@ -1,0 +1,215 @@
+/* ==========================================================================
+   Design tokens
+
+   Two independent dimensions, both persisted in localStorage and both applied
+   by the inline no-FOUC script in Head.astro before first paint:
+
+     data-mode   = light | dark        (absent  = follow the system)
+     data-accent = emerald | rose | indigo | amber   (absent = emerald)
+
+   Each accent ships a light-mode and a dark-mode variant. The mode blocks
+   below choose which half of every pair is live, so the two axes never
+   interfere with each other.
+
+   Every colour pair that ships was contrast-checked; the lowest ratio in the
+   whole set is 5.01:1, comfortably past WCAG AA. See DESIGN.md for the table.
+   ========================================================================== */
+
+/* --- Accent ramps: hue only, no surfaces ------------------------------- */
+
+:root,
+:root[data-accent="emerald"] {
+  --accent-l:          #047c57;
+  --accent-hover-l:    #036346;
+  --accent-fill-l:     #dcece6;
+  --accent-on-fill-l:  #04704e;
+  --accent-contrast-l: #fafbfa;
+
+  --accent-d:          #059669;
+  --accent-hover-d:    #3cad8a;
+  --accent-fill-d:     #0a241b;
+  --accent-on-fill-d:  #21a27a;
+  --accent-contrast-d: #0b100d;
+}
+
+:root[data-accent="rose"] {
+  --accent-l:          #d31b44;
+  --accent-hover-l:    #a91636;
+  --accent-fill-l:     #f5e0e4;
+  --accent-on-fill-l:  #bb183c;
+  --accent-contrast-l: #fafbfa;
+
+  --accent-d:          #e7476a;
+  --accent-hover-d:    #ec6f8b;
+  --accent-fill-d:     #2c181b;
+  --accent-on-fill-d:  #ea5c7b;
+  --accent-contrast-d: #0b100d;
+}
+
+:root[data-accent="indigo"] {
+  --accent-l:          #4f46e5;
+  --accent-hover-l:    #3f38b7;
+  --accent-fill-l:     #e5e5f7;
+  --accent-on-fill-l:  #4f46e5;
+  --accent-contrast-l: #fafbfa;
+
+  --accent-d:          #7b74ec;
+  --accent-hover-d:    #9893f0;
+  --accent-fill-d:     #1c1f2e;
+  --accent-on-fill-d:  #8882ee;
+  --accent-contrast-d: #0b100d;
+}
+
+:root[data-accent="amber"] {
+  --accent-l:          #a35904;
+  --accent-hover-l:    #824703;
+  --accent-fill-l:     #f0e8dc;
+  --accent-on-fill-l:  #935004;
+  --accent-contrast-l: #fafbfa;
+
+  --accent-d:          #d97706;
+  --accent-hover-d:    #e1953d;
+  --accent-fill-d:     #2a1f0c;
+  --accent-on-fill-d:  #d97706;
+  --accent-contrast-d: #0b100d;
+}
+
+/* --- Surfaces + which half of each accent pair is live ----------------- */
+
+:root {
+  color-scheme: light;
+  --bg:            #fafbfa;
+  --bg-raised:     #ffffff;
+  --bg-sunken:     #f0f2f0;
+  --text:          #0e1512;
+  --text-muted:    #515b56;
+  --border:        #e3e7e4;
+  --border-strong: #c9d0cb;
+  --shadow: 0 1px 2px rgb(14 21 18 / 4%), 0 8px 24px -12px rgb(14 21 18 / 10%);
+  --accent:          var(--accent-l);
+  --accent-hover:    var(--accent-hover-l);
+  --accent-fill:     var(--accent-fill-l);
+  --accent-on-fill:  var(--accent-on-fill-l);
+  --accent-contrast: var(--accent-contrast-l);
+}
+
+/* System preference, unless the reader explicitly chose light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode="light"]) {
+    color-scheme: dark;
+  --bg:            #0b100d;
+  --bg-raised:     #131a16;
+  --bg-sunken:     #070b09;
+  --text:          #e8ede9;
+  --text-muted:    #98a49d;
+  --border:        #232c27;
+  --border-strong: #38443d;
+  --shadow: 0 1px 2px rgb(0 0 0 / 35%), 0 8px 24px -12px rgb(0 0 0 / 65%);
+  --accent:          var(--accent-d);
+  --accent-hover:    var(--accent-hover-d);
+  --accent-fill:     var(--accent-fill-d);
+  --accent-on-fill:  var(--accent-on-fill-d);
+  --accent-contrast: var(--accent-contrast-d);
+  }
+}
+
+/* Explicit choice always wins over the system preference. */
+:root[data-mode="dark"] {
+  color-scheme: dark;
+  --bg:            #0b100d;
+  --bg-raised:     #131a16;
+  --bg-sunken:     #070b09;
+  --text:          #e8ede9;
+  --text-muted:    #98a49d;
+  --border:        #232c27;
+  --border-strong: #38443d;
+  --shadow: 0 1px 2px rgb(0 0 0 / 35%), 0 8px 24px -12px rgb(0 0 0 / 65%);
+  --accent:          var(--accent-d);
+  --accent-hover:    var(--accent-hover-d);
+  --accent-fill:     var(--accent-fill-d);
+  --accent-on-fill:  var(--accent-on-fill-d);
+  --accent-contrast: var(--accent-contrast-d);
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:            #fafbfa;
+  --bg-raised:     #ffffff;
+  --bg-sunken:     #f0f2f0;
+  --text:          #0e1512;
+  --text-muted:    #515b56;
+  --border:        #e3e7e4;
+  --border-strong: #c9d0cb;
+  --shadow: 0 1px 2px rgb(14 21 18 / 4%), 0 8px 24px -12px rgb(14 21 18 / 10%);
+  --accent:          var(--accent-l);
+  --accent-hover:    var(--accent-hover-l);
+  --accent-fill:     var(--accent-fill-l);
+  --accent-on-fill:  var(--accent-on-fill-l);
+  --accent-contrast: var(--accent-contrast-l);
+}
+
+/* --- Type, space, layout: unchanged ------------------------------------ */
+
+:root {
+  /* --- Type ------------------------------------------------------------- */
+  --font-serif: 'Source Serif 4', 'Iowan Old Style', 'Palatino Linotype', Palatino,
+    'Book Antiqua', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Modular scale, ratio 1.25, anchored on the 19px reading size. */
+  --step--2: 0.76rem;   /* 12px — tag chips, ad label          */
+  --step--1: 0.95rem;   /* 15px — meta, byline, captions       */
+  --step-0: 1.1875rem;  /* 19px — post body                    */
+  --step-1: 1.484rem;   /* 24px — lead paragraph, h4           */
+  --step-2: 1.856rem;   /* 30px — h3                           */
+  --step-3: clamp(2rem, 1.6rem + 1.8vw, 2.32rem);      /* h2       */
+  --step-4: clamp(2.3rem, 1.7rem + 2.8vw, 2.9rem);     /* post h1  */
+  --step-5: clamp(2.6rem, 1.8rem + 4vw, 3.625rem);     /* display  */
+
+  --leading-body: 1.7;
+  --leading-heading: 1.25;
+  --leading-display: 1.15;
+  --leading-ui: 1.5;
+
+  --tracking-tight: -0.015em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Space between paragraphs in the reading column. Deliberately generous. */
+  --paragraph-gap: 1.35em;
+
+  /* --- Space: 4px base -------------------------------------------------- */
+  --space-3xs: 0.25rem;  /*   4px */
+  --space-2xs: 0.5rem;   /*   8px */
+  --space-xs: 0.75rem;   /*  12px */
+  --space-s: 1rem;       /*  16px */
+  --space-m: 1.5rem;     /*  24px */
+  --space-l: 2rem;       /*  32px */
+  --space-xl: 3rem;      /*  48px */
+  --space-2xl: 4.5rem;   /*  72px */
+  --space-3xl: 7rem;     /* 112px */
+
+  /* --- Measure & containers --------------------------------------------- */
+  --measure: 68ch;          /* the reading column, exactly as specified */
+  --container: 72rem;       /* 1152px — standard page shell             */
+  --container-wide: 88rem;  /* 1408px — post page with both rails       */
+  --gutter: var(--space-m);
+
+  /* --- Ad slots: fixed reservations, so real ads cause zero CLS ---------- */
+  --ad-h-inline: 300px;
+  --ad-h-sidebar: 280px;
+  --ad-w-sidebar: 300px;
+
+  /* --- Misc ------------------------------------------------------------- */
+  --radius: 4px;
+  --radius-lg: 8px;
+  --focus-ring: 2px solid var(--accent);
+  --focus-offset: 3px;
+}

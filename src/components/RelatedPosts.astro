@@ -1,0 +1,23 @@
+---
+import PostCard from './PostCard.astro';
+import type { Post } from '../lib/posts';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+
+{posts.length > 0 && (
+  <section class="section shell-wide" aria-labelledby="related-heading">
+    <div class="section-head reveal">
+      <h2 id="related-heading">Keep reading</h2>
+      <a href="/blog">All articles</a>
+    </div>
+
+    <div class="card-grid card-grid--3">
+      {posts.map((post) => <PostCard post={post} headingLevel={3} />)}
+    </div>
+  </section>
+)}

@@ -1,0 +1,27 @@
+---
+import AdSlot from './AdSlot.astro';
+import { splitForAds } from '../lib/split-content';
+
+interface Props {
+  /** Rendered post HTML, from entry.rendered.html. */
+  html: string;
+}
+
+const { html } = Astro.props;
+
+/* Chunks are cut at <h2> boundaries, so the ads land after the first section
+   and again mid-article rather than being stacked around the whole body. */
+const chunks = splitForAds(html);
+const slotIds = ['after-first-section', 'mid-article'];
+---
+
+<div class="post-body">
+  {chunks.map((chunk, index) => (
+    <>
+      <div class="prose" set:html={chunk} />
+      {index < chunks.length - 1 && (
+        <AdSlot placement="inline" id={slotIds[index] ?? `inline-${index}`} />
+      )}
+    </>
+  ))}
+</div>

@@ -1,0 +1,40 @@
+---
+import { readingTimeMinutes, readingTimeLabel } from '../lib/reading-time';
+import type { Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  showAuthor?: boolean;
+  showUpdated?: boolean;
+}
+
+const { post, showAuthor = false, showUpdated = false } = Astro.props;
+
+const minutes = readingTimeMinutes(post.body ?? '');
+const dateFormat: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+const published = post.data.publishDate.toLocaleDateString('en-US', dateFormat);
+const updated = post.data.updatedDate?.toLocaleDateString('en-US', dateFormat);
+---
+
+<div class="post-meta">
+  {showAuthor && (
+    <>
+      <span>By {post.data.author}</span>
+      <span class="post-meta__sep" aria-hidden="true">·</span>
+    </>
+  )}
+
+  <time datetime={post.data.publishDate.toISOString()}>{published}</time>
+
+  {showUpdated && updated && (
+    <>
+      <span class="post-meta__sep" aria-hidden="true">·</span>
+      <span>Updated <time datetime={post.data.updatedDate!.toISOString()}>{updated}</time></span>
+    </>
+  )}
+
+  <span class="post-meta__sep" aria-hidden="true">·</span>
+  <span>{readingTimeLabel(minutes)}</span>
+
+  {post.data.draft && <span class="draft-badge">Draft</span>}
+</div>
