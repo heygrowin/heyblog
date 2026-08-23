@@ -11,7 +11,7 @@ tags:
 heroImage: /images/best-transcription-software-reviews.jpg
 heroImageAlt: "Title card reading “Best transcription software reviews” set in white on a dark green gradient with concentric circle motifs"
 author: "The HeyBlog Desk"
-draft: true
+draft: false
 sourceTopicId: topic_1532
 ---
 
