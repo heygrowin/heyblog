@@ -105,7 +105,7 @@ export const SITE = {
   author: {
     /** Default byline. The schema uses this when a post omits `author`. */
     name: 'The HeyBlog Desk',
-    email: 'hello@heyblog.example',
+    email: 'heygrowteam@gmail.com',
     /** Shown on /about and used as the JSON-LD Person/Organization description. */
     bio: 'A small independent desk covering tools, platforms and the economics of creative work. Articles are drafted with AI assistance and reviewed by a person before publishing.',
   },
@@ -183,11 +183,11 @@ export const SITE = {
    * Organization JSON-LD. Fill these in before launch.
    */
   legal: {
-    entityName: '[YOUR LEGAL ENTITY NAME]',
-    address: '[YOUR BUSINESS ADDRESS]',
-    jurisdiction: '[YOUR STATE / COUNTRY]',
-    contactEmail: 'hello@heyblog.example',
-    privacyEmail: 'privacy@heyblog.example',
+    entityName: 'heygrowin',
+    address: '§§',
+    jurisdiction: '§§',
+    contactEmail: 'heygrowteam@gmail.com',
+    privacyEmail: 'heygrowteam@gmail.com',
   },
 } as const;
 
