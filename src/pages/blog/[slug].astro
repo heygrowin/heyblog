@@ -10,6 +10,7 @@ import HeroImage from '../../components/HeroImage.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import PostBody from '../../components/PostBody.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
+import AiDisclosure from '../../components/AiDisclosure.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import RelatedPosts from '../../components/RelatedPosts.astro';
 import EmailSignup from '../../components/EmailSignup.astro';
@@ -102,6 +103,8 @@ const path = postPath(post.data.slug);
         <PostBody html={html} />
 
         {post.data.faq && <FaqBlock faq={post.data.faq} />}
+
+        <AiDisclosure />
 
         {post.data.tags.length > 0 && (
           <footer class="post-footer">

@@ -1,0 +1,67 @@
+---
+import { SITE } from '../config';
+
+/**
+ * Shown at the foot of every article.
+ *
+ * States plainly how the piece was made and invites correction. This is a trust
+ * signal, and it is also the honest position: AI-assisted drafting with human
+ * review reduces errors but does not eliminate them, and readers deserve to
+ * know that before they act on anything here.
+ */
+const email = SITE.author.email;
+---
+
+<aside class="ai-note" aria-labelledby="ai-note-heading">
+  <h2 class="ai-note__title" id="ai-note-heading">How this article was made</h2>
+  <p>
+    This article was <strong>drafted with AI assistance and reviewed by a person</strong>
+    before publishing. A human editor checked the claims that matter, removed what could
+    not be supported, and decided it was worth publishing.
+  </p>
+  <p>
+    That process reduces mistakes but does not remove them. Prices, features and policies
+    also change after publication. Treat this as general information, not professional
+    advice — and check anything you intend to rely on.
+  </p>
+  <p class="ai-note__cta">
+    <strong>Spotted something wrong?</strong> Tell us and we will fix it — corrections are
+    made promptly and the update date at the top of the article changes so readers can see
+    it was revised. Email <a href={`mailto:${email}`}>{email}</a> or use the
+    <a href="/contact">contact page</a>.
+  </p>
+</aside>
+
+<style>
+  .ai-note {
+    max-width: var(--measure);
+    margin-top: var(--space-2xl);
+    padding: var(--space-m);
+    background-color: var(--bg-sunken);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-lg);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  .ai-note__title {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .ai-note p + p {
+    margin-top: var(--space-xs);
+  }
+
+  .ai-note__cta {
+    color: var(--text);
+  }
+</style>

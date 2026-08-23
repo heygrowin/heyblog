@@ -1,154 +1,157 @@
 /* ==========================================================================
    Design tokens
 
-   Two independent dimensions, both persisted in localStorage and both applied
-   by the inline no-FOUC script in Head.astro before first paint:
-
-     data-mode   = light | dark        (absent  = follow the system)
+   Two independent axes, both applied before first paint by the inline script
+   in Head.astro:
+     data-mode   = light | dark        (absent = follow the system)
      data-accent = emerald | rose | indigo | amber   (absent = emerald)
 
-   Each accent ships a light-mode and a dark-mode variant. The mode blocks
-   below choose which half of every pair is live, so the two axes never
-   interfere with each other.
-
-   Every colour pair that ships was contrast-checked; the lowest ratio in the
-   whole set is 5.01:1, comfortably past WCAG AA. See DESIGN.md for the table.
+   Changing the accent re-tints the WHOLE page — background, surfaces, borders
+   and text all shift with the hue, not just links. Every pairing below was
+   contrast-checked across all four accents in both modes; the lowest ratio in
+   the shipped set is 4.95:1, past WCAG AA. See DESIGN.md.
    ========================================================================== */
 
-/* --- Accent ramps: hue only, no surfaces ------------------------------- */
+/* --- Full palette per accent, light and dark halves ---------------------- */
 
 :root,
 :root[data-accent="emerald"] {
-  --accent-l:          #047c57;
-  --accent-hover-l:    #036346;
-  --accent-fill-l:     #dcece6;
-  --accent-on-fill-l:  #04704e;
-  --accent-contrast-l: #fafbfa;
+  --bg-l:#f6faf9;        --bg-raised-l:#fcfdfd;   --bg-sunken-l:#ecf5f2;
+  --text-l:#011610;      --text-muted-l:#01251a;
+  --accent-l:#047c57;   --accent-hover-l:#047c57;
+  --accent-fill-l:#ecf5f2; --accent-on-fill-l:#047c57;
+  --accent-contrast-l:#fcfdfd;
+  --border-l:#d4e8e2;    --border-strong-l:#d4e8e2;
 
-  --accent-d:          #059669;
-  --accent-hover-d:    #3cad8a;
-  --accent-fill-d:     #0a241b;
-  --accent-on-fill-d:  #21a27a;
-  --accent-contrast-d: #0b100d;
+  --bg-d:#0a120f;        --bg-raised-d:#0a1713;  --bg-sunken-d:#000503;
+  --text-d:#e6f2ee;      --text-muted-d:#aad2c6;
+  --accent-d:#059669;   --accent-hover-d:#059669;
+  --accent-fill-d:#000503; --accent-on-fill-d:#059669;
+  --accent-contrast-d:#0a120f;
+  --border-d:#09291f;    --border-strong-d:#09291f;
 }
 
 :root[data-accent="rose"] {
-  --accent-l:          #d31b44;
-  --accent-hover-l:    #a91636;
-  --accent-fill-l:     #f5e0e4;
-  --accent-on-fill-l:  #bb183c;
-  --accent-contrast-l: #fafbfa;
+  --bg-l:#fdf7f8;        --bg-raised-l:#fefcfd;   --bg-sunken-l:#fceef1;
+  --text-l:#26050c;      --text-muted-l:#3f0814;
+  --accent-l:#d31b44;   --accent-hover-l:#d31b44;
+  --accent-fill-l:#fceef1; --accent-on-fill-l:#d31b44;
+  --accent-contrast-l:#fefcfd;
+  --border-l:#f7d8df;    --border-strong-l:#f7d8df;
 
-  --accent-d:          #e7476a;
-  --accent-hover-d:    #ec6f8b;
-  --accent-fill-d:     #2c181b;
-  --accent-on-fill-d:  #ea5c7b;
-  --accent-contrast-d: #0b100d;
+  --bg-d:#150d0e;        --bg-raised-d:#1e0e11;  --bg-sunken-d:#080103;
+  --text-d:#fbe8ec;      --text-muted-d:#f0b1bf;
+  --accent-d:#e7476a;   --accent-hover-d:#e7476a;
+  --accent-fill-d:#080103; --accent-on-fill-d:#e7476a;
+  --accent-contrast-d:#150d0e;
+  --border-d:#3f101a;    --border-strong-d:#3f101a;
 }
 
 :root[data-accent="indigo"] {
-  --accent-l:          #4f46e5;
-  --accent-hover-l:    #3f38b7;
-  --accent-fill-l:     #e5e5f7;
-  --accent-on-fill-l:  #4f46e5;
-  --accent-contrast-l: #fafbfa;
+  --bg-l:#f9f9fe;        --bg-raised-l:#fdfdff;   --bg-sunken-l:#f2f1fd;
+  --text-l:#0e0d29;      --text-muted-l:#181545;
+  --accent-l:#4f46e5;   --accent-hover-l:#4f46e5;
+  --accent-fill-l:#f2f1fd; --accent-on-fill-l:#4f46e5;
+  --accent-contrast-l:#fdfdff;
+  --border-l:#e1e0fa;    --border-strong-l:#e1e0fa;
 
-  --accent-d:          #7b74ec;
-  --accent-hover-d:    #9893f0;
-  --accent-fill-d:     #1c1f2e;
-  --accent-on-fill-d:  #8882ee;
-  --accent-contrast-d: #0b100d;
+  --bg-d:#0e0f17;        --bg-raised-d:#111221;  --bg-sunken-d:#030309;
+  --text-d:#edecfc;      --text-muted-d:#c3c0f6;
+  --accent-d:#7b74ec;   --accent-hover-d:#7b74ec;
+  --accent-fill-d:#030309; --accent-on-fill-d:#7b74ec;
+  --accent-contrast-d:#0e0f17;
+  --border-d:#1c1b44;    --border-strong-d:#1c1b44;
 }
 
 :root[data-accent="amber"] {
-  --accent-l:          #a35904;
-  --accent-hover-l:    #824703;
-  --accent-fill-l:     #f0e8dc;
-  --accent-on-fill-l:  #935004;
-  --accent-contrast-l: #fafbfa;
+  --bg-l:#fcf9f6;        --bg-raised-l:#fefdfc;   --bg-sunken-l:#f8f3ec;
+  --text-l:#1d1001;      --text-muted-l:#311b01;
+  --accent-l:#a35904;   --accent-hover-l:#a35904;
+  --accent-fill-l:#f8f3ec; --accent-on-fill-l:#a35904;
+  --accent-contrast-l:#fefdfc;
+  --border-l:#f0e3d4;    --border-strong-l:#f0e3d4;
 
-  --accent-d:          #d97706;
-  --accent-hover-d:    #e1953d;
-  --accent-fill-d:     #2a1f0c;
-  --accent-on-fill-d:  #d97706;
-  --accent-contrast-d: #0b100d;
+  --bg-d:#12100b;        --bg-raised-d:#19140b;  --bg-sunken-d:#070400;
+  --text-d:#f6eee6;      --text-muted-d:#e0c7aa;
+  --accent-d:#d97706;   --accent-hover-d:#d97706;
+  --accent-fill-d:#070400; --accent-on-fill-d:#d97706;
+  --accent-contrast-d:#12100b;
+  --border-d:#322009;    --border-strong-d:#322009;
 }
 
-/* --- Surfaces + which half of each accent pair is live ----------------- */
+/* --- Mode chooses which half is live ------------------------------------ */
 
 :root {
   color-scheme: light;
-  --bg:            #fafbfa;
-  --bg-raised:     #ffffff;
-  --bg-sunken:     #f0f2f0;
-  --text:          #0e1512;
-  --text-muted:    #515b56;
-  --border:        #e3e7e4;
-  --border-strong: #c9d0cb;
-  --shadow: 0 1px 2px rgb(14 21 18 / 4%), 0 8px 24px -12px rgb(14 21 18 / 10%);
-  --accent:          var(--accent-l);
-  --accent-hover:    var(--accent-hover-l);
-  --accent-fill:     var(--accent-fill-l);
-  --accent-on-fill:  var(--accent-on-fill-l);
+  --bg: var(--bg-l);
+  --bg-raised: var(--bg-raised-l);
+  --bg-sunken: var(--bg-sunken-l);
+  --text: var(--text-l);
+  --text-muted: var(--text-muted-l);
+  --accent: var(--accent-l);
+  --accent-hover: var(--accent-hover-l);
+  --accent-fill: var(--accent-fill-l);
+  --accent-on-fill: var(--accent-on-fill-l);
   --accent-contrast: var(--accent-contrast-l);
+  --border: var(--border-l);
+  --border-strong: var(--border-strong-l);
+  --shadow: 0 1px 2px rgb(0 0 0 / 4%), 0 8px 24px -12px rgb(0 0 0 / 10%);
 }
 
-/* System preference, unless the reader explicitly chose light. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-mode="light"]) {
     color-scheme: dark;
-  --bg:            #0b100d;
-  --bg-raised:     #131a16;
-  --bg-sunken:     #070b09;
-  --text:          #e8ede9;
-  --text-muted:    #98a49d;
-  --border:        #232c27;
-  --border-strong: #38443d;
-  --shadow: 0 1px 2px rgb(0 0 0 / 35%), 0 8px 24px -12px rgb(0 0 0 / 65%);
-  --accent:          var(--accent-d);
-  --accent-hover:    var(--accent-hover-d);
-  --accent-fill:     var(--accent-fill-d);
-  --accent-on-fill:  var(--accent-on-fill-d);
+  --bg: var(--bg-d);
+  --bg-raised: var(--bg-raised-d);
+  --bg-sunken: var(--bg-sunken-d);
+  --text: var(--text-d);
+  --text-muted: var(--text-muted-d);
+  --accent: var(--accent-d);
+  --accent-hover: var(--accent-hover-d);
+  --accent-fill: var(--accent-fill-d);
+  --accent-on-fill: var(--accent-on-fill-d);
   --accent-contrast: var(--accent-contrast-d);
+  --border: var(--border-d);
+  --border-strong: var(--border-strong-d);
+  --shadow: 0 1px 2px rgb(0 0 0 / 35%), 0 8px 24px -12px rgb(0 0 0 / 65%);
   }
 }
 
-/* Explicit choice always wins over the system preference. */
 :root[data-mode="dark"] {
   color-scheme: dark;
-  --bg:            #0b100d;
-  --bg-raised:     #131a16;
-  --bg-sunken:     #070b09;
-  --text:          #e8ede9;
-  --text-muted:    #98a49d;
-  --border:        #232c27;
-  --border-strong: #38443d;
-  --shadow: 0 1px 2px rgb(0 0 0 / 35%), 0 8px 24px -12px rgb(0 0 0 / 65%);
-  --accent:          var(--accent-d);
-  --accent-hover:    var(--accent-hover-d);
-  --accent-fill:     var(--accent-fill-d);
-  --accent-on-fill:  var(--accent-on-fill-d);
+  --bg: var(--bg-d);
+  --bg-raised: var(--bg-raised-d);
+  --bg-sunken: var(--bg-sunken-d);
+  --text: var(--text-d);
+  --text-muted: var(--text-muted-d);
+  --accent: var(--accent-d);
+  --accent-hover: var(--accent-hover-d);
+  --accent-fill: var(--accent-fill-d);
+  --accent-on-fill: var(--accent-on-fill-d);
   --accent-contrast: var(--accent-contrast-d);
+  --border: var(--border-d);
+  --border-strong: var(--border-strong-d);
+  --shadow: 0 1px 2px rgb(0 0 0 / 35%), 0 8px 24px -12px rgb(0 0 0 / 65%);
 }
 
 :root[data-mode="light"] {
   color-scheme: light;
-  --bg:            #fafbfa;
-  --bg-raised:     #ffffff;
-  --bg-sunken:     #f0f2f0;
-  --text:          #0e1512;
-  --text-muted:    #515b56;
-  --border:        #e3e7e4;
-  --border-strong: #c9d0cb;
-  --shadow: 0 1px 2px rgb(14 21 18 / 4%), 0 8px 24px -12px rgb(14 21 18 / 10%);
-  --accent:          var(--accent-l);
-  --accent-hover:    var(--accent-hover-l);
-  --accent-fill:     var(--accent-fill-l);
-  --accent-on-fill:  var(--accent-on-fill-l);
+  --bg: var(--bg-l);
+  --bg-raised: var(--bg-raised-l);
+  --bg-sunken: var(--bg-sunken-l);
+  --text: var(--text-l);
+  --text-muted: var(--text-muted-l);
+  --accent: var(--accent-l);
+  --accent-hover: var(--accent-hover-l);
+  --accent-fill: var(--accent-fill-l);
+  --accent-on-fill: var(--accent-on-fill-l);
   --accent-contrast: var(--accent-contrast-l);
+  --border: var(--border-l);
+  --border-strong: var(--border-strong-l);
+  --shadow: 0 1px 2px rgb(0 0 0 / 4%), 0 8px 24px -12px rgb(0 0 0 / 10%);
 }
 
-/* --- Type, space, layout: unchanged ------------------------------------ */
+/* --- Type, space, layout ------------------------------------------------ */
 
 :root {
   /* --- Type ------------------------------------------------------------- */
@@ -159,16 +162,18 @@
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 
   /* Modular scale, ratio 1.25, anchored on the 19px reading size. */
-  --step--2: 0.76rem;   /* 12px — tag chips, ad label          */
-  --step--1: 0.95rem;   /* 15px — meta, byline, captions       */
-  --step-0: 1.1875rem;  /* 19px — post body                    */
-  --step-1: 1.484rem;   /* 24px — lead paragraph, h4           */
-  --step-2: 1.856rem;   /* 30px — h3                           */
-  --step-3: clamp(2rem, 1.6rem + 1.8vw, 2.32rem);      /* h2       */
-  --step-4: clamp(2.3rem, 1.7rem + 2.8vw, 2.9rem);     /* post h1  */
-  --step-5: clamp(2.6rem, 1.8rem + 4vw, 3.625rem);     /* display  */
+  /* Fluid from 360px up. The lower bound is what a phone actually gets: a
+     44px headline and 19px body left almost no content above the fold. */
+  --step--2: 0.75rem;
+  --step--1: 0.875rem;
+  --step-0:  clamp(1.0625rem, 1.0rem + 0.28vw, 1.1875rem);  /* 17 → 19px body   */
+  --step-1:  clamp(1.1875rem, 1.06rem + 0.55vw, 1.484rem);  /* 19 → 24px lead   */
+  --step-2:  clamp(1.375rem, 1.19rem + 0.8vw, 1.856rem);    /* 22 → 30px h3     */
+  --step-3:  clamp(1.5rem,  1.28rem + 1.0vw, 2.32rem);      /* 24 → 37px h2     */
+  --step-4:  clamp(1.75rem, 1.42rem + 1.5vw, 2.9rem);       /* 28 → 46px post h1*/
+  --step-5:  clamp(2rem,    1.55rem + 2.0vw, 3.625rem);     /* 32 → 58px display*/
 
-  --leading-body: 1.7;
+  --leading-body: 1.65;
   --leading-heading: 1.25;
   --leading-display: 1.15;
   --leading-ui: 1.5;
@@ -200,7 +205,7 @@
   --measure: 68ch;          /* the reading column, exactly as specified */
   --container: 72rem;       /* 1152px — standard page shell             */
   --container-wide: 88rem;  /* 1408px — post page with both rails       */
-  --gutter: var(--space-m);
+  --gutter: var(--space-s);   /* 16px on phones; widened at 640px below */
 
   /* --- Ad slots: fixed reservations, so real ads cause zero CLS ---------- */
   --ad-h-inline: 300px;

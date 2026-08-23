@@ -63,6 +63,11 @@ html {
   }
 }
 
+/* Roomier gutters once there is room for them. */
+@media (min-width: 640px) {
+  :root { --gutter: var(--space-m); }
+}
+
 body {
   min-height: 100dvh;
   background-color: var(--bg);
@@ -111,6 +116,12 @@ h4 {
 p,
 li {
   text-wrap: pretty;
+}
+
+/* A long URL or unbroken token must never widen the page on a phone. */
+p, li, h1, h2, h3, h4, td, th, blockquote, figcaption, .card__title, .post-title {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 a {

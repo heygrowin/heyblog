@@ -31,7 +31,11 @@ main {
 }
 
 .section {
-  padding-block: var(--space-2xl);
+  padding-block: var(--space-xl);
+}
+
+@media (min-width: 700px) {
+  .section { padding-block: var(--space-2xl); }
 }
 
 .section + .section {
@@ -498,8 +502,15 @@ a.pill:hover {
 /* --- Post page ------------------------------------------------------------ */
 
 .post-header {
-  padding-top: var(--space-xl);
-  padding-bottom: var(--space-m);
+  padding-top: var(--space-m);
+  padding-bottom: var(--space-s);
+}
+
+@media (min-width: 700px) {
+  .post-header {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-m);
+  }
 }
 
 .post-header__inner {
@@ -513,11 +524,13 @@ a.pill:hover {
 }
 
 .post-standfirst {
-  margin-top: var(--space-s);
+  margin-top: var(--space-xs);
   font-family: var(--font-serif);
   font-size: var(--step-1);
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--text-muted);
+  /* Long standfirsts pushed every article below the fold on a phone. */
+  max-width: 46ch;
 }
 
 .post-header .post-meta {
@@ -527,7 +540,11 @@ a.pill:hover {
 }
 
 .post-hero {
-  margin-block: var(--space-m) var(--space-xl);
+  margin-block: var(--space-s) var(--space-m);
+}
+
+@media (min-width: 700px) {
+  .post-hero { margin-block: var(--space-m) var(--space-xl); }
 }
 
 .post-hero img {
@@ -925,12 +942,17 @@ a.pill:hover {
 /* --- Landing hero --------------------------------------------------------- */
 
 .hero {
-  padding-block: var(--space-2xl) var(--space-xl);
+  padding-block: var(--space-xl) var(--space-l);
   border-bottom: 1px solid var(--border);
 }
 
 .hero__inner {
-  max-width: 26ch;
+  max-width: 20ch;
+}
+
+@media (min-width: 700px) {
+  .hero { padding-block: var(--space-2xl) var(--space-xl); }
+  .hero__inner { max-width: 26ch; }
 }
 
 .hero__title {
