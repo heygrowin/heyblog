@@ -11,7 +11,7 @@ tags:
 heroImage: /images/tax-software-best-buy.jpg
 heroImageAlt: "Title card reading “Tax software best buy” set in white on a dark green gradient with concentric circle motifs"
 author: "The HeyBlog Desk"
-draft: true
+draft: false
 sourceTopicId: topic_1196
 ---
 
