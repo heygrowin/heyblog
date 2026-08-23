@@ -11,7 +11,7 @@ tags:
 heroImage: /images/resume-builder-best-template.jpg
 heroImageAlt: "Title card reading “Resume builder best template” set in white on a dark green gradient with concentric circle motifs"
 author: "The HeyBlog Desk"
-draft: true
+draft: false
 sourceTopicId: topic_1456
 ---
 
