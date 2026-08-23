@@ -158,7 +158,7 @@ export const SITE = {
      * Get the token: Cloudflare dashboard -> Web Analytics -> add this site.
      * Paste the token here. While it is empty, nothing is loaded at all.
      */
-    cloudflareToken: '',
+    cloudflareToken: 'dcaba0f03e02488d8a4511d269628324',
   },
 
   /**

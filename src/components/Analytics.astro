@@ -16,10 +16,12 @@ const token = SITE.analytics.cloudflareToken;
 const enabled = token !== '' && import.meta.env.PROD;
 ---
 
+{/* Cloudflare's own snippet form. A module script defers by default, so it
+    never blocks rendering and cannot affect LCP. */}
 {enabled && (
   <script
     is:inline
-    defer
+    type="module"
     src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon={`{"token": "${token}"}`}
   />
