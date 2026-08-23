@@ -6,12 +6,36 @@
  * HTML in each chunk stays balanced.
  */
 
+/**
+ * Container elements a cut must never land inside. Splitting mid-<ul> leaves the
+ * opening tag in one chunk and its <li>s in the next, and because each chunk is
+ * injected into its own div the browser reparents those <li>s as direct children
+ * of .prose — invalid HTML that fails the axe `listitem` rule. This shipped once.
+ */
+const CONTAINERS = ['ul', 'ol', 'blockquote', 'table', 'pre', 'figure', 'dl'];
+
+/** How many container elements are still open at `offset`. 0 means safe to cut. */
+function openDepthAt(html: string, offset: number): number {
+  const head = html.slice(0, offset);
+  let depth = 0;
+  const tag = /<(\/?)(ul|ol|blockquote|table|pre|figure|dl)\b[^>]*>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = tag.exec(head)) !== null) {
+    depth += m[1] ? -1 : 1;
+  }
+  return Math.max(0, depth);
+}
+
+const isSafeCut = (html: string, offset: number) => openDepthAt(html, offset) === 0;
+
 /** Byte offsets of every top-level <h2> in the document. */
 function h2Offsets(html: string): number[] {
   const offsets: number[] = [];
   const pattern = /<h2[\s>]/gi;
   let match: RegExpExecArray | null;
-  while ((match = pattern.exec(html)) !== null) offsets.push(match.index);
+  while ((match = pattern.exec(html)) !== null) {
+    if (isSafeCut(html, match.index)) offsets.push(match.index);
+  }
   return offsets;
 }
 
@@ -26,7 +50,8 @@ function paragraphOffsets(html: string, fractions: number[]): number[] {
 
   return fractions
     .map((f) => ends[Math.min(ends.length - 2, Math.max(1, Math.round(ends.length * f)))])
-    .filter((offset): offset is number => offset !== undefined);
+    .filter((offset): offset is number => offset !== undefined)
+    .filter((offset) => isSafeCut(html, offset));
 }
 
 /**
@@ -55,6 +80,8 @@ export function splitForAds(html: string): string[] {
   const kept: number[] = [];
   let previous = 0;
   for (const cut of ordered) {
+    // Final guard: never cut with a container open, whatever produced the offset.
+    if (!isSafeCut(html, cut)) continue;
     if (cut - previous >= minChunk && html.length - cut >= minChunk) {
       kept.push(cut);
       previous = cut;
