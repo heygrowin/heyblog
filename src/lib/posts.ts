@@ -50,8 +50,25 @@ export const showDrafts = import.meta.env.PUBLIC_SHOW_DRAFTS === 'true';
 let cachedVisible: Post[] | null = null;
 let warnedAboutDrafts = false;
 
-const byNewestFirst = (a: Post, b: Post) =>
-  b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+/**
+ * Newest first, with a deterministic tie-break.
+ *
+ * publishDate is often date-only, so every post published on the same day has an
+ * identical timestamp and the sort was arbitrary — new posts could appear behind
+ * older ones from the same day, or not surface in "Latest" at all. The engine now
+ * writes a full ISO datetime; this keeps older date-only posts stable by falling
+ * back to updatedDate and then to the slug.
+ */
+const byNewestFirst = (a: Post, b: Post) => {
+  const byDate = b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+  if (byDate !== 0) return byDate;
+
+  const au = a.data.updatedDate?.valueOf() ?? 0;
+  const bu = b.data.updatedDate?.valueOf() ?? 0;
+  if (bu !== au) return bu - au;
+
+  return b.data.slug.localeCompare(a.data.slug);
+};
 
 /**
  * Every post that should have a page on this build, newest first.

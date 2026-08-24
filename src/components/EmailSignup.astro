@@ -13,7 +13,9 @@ const { endpoint, fieldName, heading, blurb, cta, reassurance } = SITE.email;
 /* One configurable constant decides whether this form is live. While the
    endpoint is empty the UI renders complete but inert, rather than pretending
    to accept an address it would silently drop. */
-const isConfigured = endpoint !== '';
+/* Treat the placeholder as unset so the form stays honest until it is real. */
+const isConfigured = endpoint !== '' && !endpoint.includes('YOUR_USERNAME');
+const hidden = (SITE.email as { hiddenFields?: Record<string, string> }).hiddenFields ?? {};
 const Heading = `h${headingLevel}` as 'h2' | 'h3';
 
 /* rel is valid on <form> per the HTML spec but is missing from Astro's
@@ -34,6 +36,7 @@ const formRel: Record<string, string> = { rel: 'noopener' };
       target="_blank"
       {...formRel}
     >
+      {Object.entries(hidden).map(([k, v]) => <input type="hidden" name={k} value={v} />)}
       <label class="visually-hidden" for="signup-email">Email address</label>
       <input
         class="signup__input"

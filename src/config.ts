@@ -138,9 +138,16 @@ export const SITE = {
      *   ConvertKit  https://app.convertkit.com/forms/YOUR_FORM_ID/subscriptions
      *   Mailchimp   https://YOUR_DC.list-manage.com/subscribe/post?u=...&id=...
      */
-    endpoint: '',
+    /**
+     * Buttondown free tier: 100 subscribers, no card, and the embed endpoint
+     * needs no JavaScript — the form POSTs straight to it.
+     * Sign up at buttondown.com, then replace YOUR_USERNAME below.
+     */
+    endpoint: 'https://buttondown.com/api/emails/embed-subscribe/YOUR_USERNAME',
     /** The `name` attribute the provider expects for the email field. */
     fieldName: 'email',
+    /** Buttondown expects this hidden field on embed posts. */
+    hiddenFields: { embed: '1' } as Record<string, string>,
     heading: 'Get the signal, not the noise',
     blurb:
       'One email a week: what actually changed, what it costs, and what to do about it. No hot takes, no affiliate churn. Unsubscribe in one click.',
