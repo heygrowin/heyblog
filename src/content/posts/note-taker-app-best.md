@@ -11,7 +11,7 @@ tags:
 heroImage: /images/note-taker-app-best.jpg
 heroImageAlt: "Title card reading “Note taker app best” set in white on a dark green gradient with concentric circle motifs"
 author: "The HeyBlog Desk"
-draft: true
+draft: false
 sourceTopicId: topic_72
 ---
 
