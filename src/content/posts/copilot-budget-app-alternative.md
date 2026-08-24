@@ -12,7 +12,7 @@ tags:
 heroImage: /images/copilot-budget-app-alternative.jpg
 heroImageAlt: "Title card reading “Copilot budget app alternative” set in white on a dark green gradient with concentric circle motifs"
 author: "The HeyBlog Desk"
-draft: true
+draft: false
 sourceTopicId: topic_172
 ---
 
