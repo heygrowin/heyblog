@@ -13,7 +13,7 @@ tags:
 heroImage: /images/niramaya-health-insurance-scheme-how-to-apply-online.jpg
 heroImageAlt: "Title card reading “Niramaya health insurance scheme how to apply online” set in white on a dark green gradient with concentric circle motifs"
 author: "The HeyBlog Desk"
-draft: false
+draft: true
 sourceTopicId: topic_1404
 ---
 
