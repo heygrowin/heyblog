@@ -11,7 +11,7 @@ tags:
 heroImage: /images/laptop-for-students-best-buy.jpg
 heroImageAlt: "Title card reading “Laptop for students best buy” set in white on a dark green gradient with concentric circle motifs"
 author: "The HeyBlog Desk"
-draft: true
+draft: false
 sourceTopicId: topic_930
 ---
 
