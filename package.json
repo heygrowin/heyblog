@@ -9,10 +9,11 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/validate-sitemap.mjs",
     "preview": "astro preview",
     "check": "astro check",
-    "sync": "astro sync"
+    "sync": "astro sync",
+    "validate-sitemap": "node scripts/validate-sitemap.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

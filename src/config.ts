@@ -102,6 +102,20 @@ export const SITE = {
   locale: 'en',
   ogLocale: 'en_US',
 
+  /**
+   * Search-engine ownership verification tokens, rendered as <meta> tags on
+   * every page. Preferred over the HTML-file method: a file living at
+   * /google....html gets 308-redirected by Cloudflare Pages' clean-URL
+   * rewrite (the same rewrite that turns every other .html output into its
+   * extensionless route — see astro.config.ts), so a meta tag is the only
+   * verification method guaranteed to be served with the page itself.
+   * Leave a value empty to omit that tag. Get the content value from Search
+   * Console: Settings -> Ownership verification -> HTML tag method.
+   */
+  siteVerification: {
+    google: '',
+  },
+
   author: {
     /** Default byline. The schema uses this when a post omits `author`. */
     name: 'The HeyBlog Desk',

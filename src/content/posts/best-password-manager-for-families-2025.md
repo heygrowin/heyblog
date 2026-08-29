@@ -8,7 +8,7 @@ tags:
   - password
   - manager
   - families
-  - 2025
+  - "2025"
 heroImage: /images/best-password-manager-for-families-2025.jpg
 heroImageAlt: "Title card reading “Best password manager for families 2025” set in white on a dark green gradient with concentric circle motifs"
 author: "The HeyBlog Desk"

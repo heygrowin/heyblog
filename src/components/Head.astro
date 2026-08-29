@@ -70,6 +70,10 @@ const imageAlt = ogImageAlt ?? `${SITE.name} — ${SITE.tagline}`;
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 
+{SITE.siteVerification.google && (
+  <meta name="google-site-verification" content={SITE.siteVerification.google} />
+)}
+
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafbfa" />
