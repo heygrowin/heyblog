@@ -113,7 +113,7 @@ export const SITE = {
    * Console: Settings -> Ownership verification -> HTML tag method.
    */
   siteVerification: {
-    google: '',
+    google: 'K3H91hwvFVD5eFOWVjrdR-J3QfjoF3_evsw5n2N4xXs',
   },
 
   author: {
