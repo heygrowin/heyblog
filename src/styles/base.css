@@ -47,6 +47,24 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  /* Safety net (2026-09-01): every element in this stylesheet is already
+     width-constrained (see layout.css's own comments on the exact grid/table
+     overflow bugs it was built to avoid), but Google's AdSense Auto ads
+     script — live on this site as of the last deploy — injects ad units via
+     JavaScript directly into the DOM, outside all of that CSS's reach and
+     outside our control over their markup. That is the standard, documented
+     cause of a NEW horizontal-scroll regression appearing right after
+     turning Auto ads on, and clipping at the root is Google's own
+     recommended mitigation. width: 100vw + overflow-x: hidden here (not on
+     body — see below) contains any such element without touching
+     `position: sticky` on the TOC/ad rails in post-grid, which breaks in
+     Safari specifically when overflow is set on a CLOSE ancestor of the
+     sticky element; html is far enough up the tree to avoid that. */
+  /* 100% not 100vw: vw includes the scrollbar gutter in some browsers,
+     which would itself introduce a few pixels of horizontal overflow —
+     exactly the bug this rule exists to prevent. */
+  width: 100%;
+  overflow-x: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
