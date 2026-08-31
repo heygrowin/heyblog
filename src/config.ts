@@ -74,6 +74,46 @@ export const ACCENTS = [
 export type AccentId = (typeof ACCENTS)[number]['id'];
 export const ACCENT_IDS = ACCENTS.map((a) => a.id) as [AccentId, ...AccentId[]];
 
+/* -------------------------------------------------------------------------- */
+/* AdSense — safe production fallback (2026-09-01)                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The real, PUBLIC AdSense publisher ID for this site — NOT a secret. A
+ * publisher ID is designed to be publicly visible: it ships in the
+ * <script client=ca-pub-...> tag sent to every visitor's browser and in the
+ * public /ads.txt file, so hardcoding the REAL id here carries none of the
+ * risk a hardcoded API key/token would (it is not a credential; nothing
+ * privileged can be done with it).
+ *
+ * PUBLIC_ADSENSE_PUBLISHER_ID / PUBLIC_ADS_ENABLED (Cloudflare Pages env
+ * vars, or a local .env) remain the PREFERRED, overridable source — this
+ * constant is used ONLY as a fallback, and ONLY for a genuine production
+ * build (import.meta.env.PROD — true for `astro build`, false for
+ * `astro dev`), for exactly one reason: the Cloudflare Pages dashboard
+ * variable can be left unset or misconfigured, and when that happens the
+ * site must still serve the real, correct ads.txt/script rather than
+ * silently falling back to "not configured" in production. `astro dev`
+ * never sees this fallback, so local development is unaffected either way.
+ * An explicit PUBLIC_ADS_ENABLED="false" always wins over everything below —
+ * this fallback exists to recover a MISSING config, never to override a
+ * deliberate one.
+ */
+const ADSENSE_FALLBACK_PUBLISHER_ID = '3124890716815520';
+
+const _adsenseRawEnabled = import.meta.env.PUBLIC_ADS_ENABLED; // 'true' | 'false' | undefined
+const _adsenseRawPublisherId = (import.meta.env.PUBLIC_ADSENSE_PUBLISHER_ID ?? '').trim();
+const _adsenseExplicitlyDisabled = _adsenseRawEnabled === 'false';
+
+const _adsensePublisherId =
+  _adsenseRawPublisherId ||
+  (import.meta.env.PROD && !_adsenseExplicitlyDisabled ? ADSENSE_FALLBACK_PUBLISHER_ID : '');
+
+const _adsenseEnabled =
+  !_adsenseExplicitlyDisabled &&
+  (_adsenseRawEnabled === 'true' || import.meta.env.PROD) &&
+  _adsensePublisherId.length > 0;
+
 export const SITE = {
   /** Publication name. Appears in the masthead, <title>, OG tags and JSON-LD. */
   name: 'HeyBlog',
@@ -183,18 +223,19 @@ export const SITE = {
   },
 
   /**
-   * Google AdSense (2026-08-31). Every value here is DERIVED from environment
-   * variables, never hardcoded — see .env.example for what each one does and
-   * where to get it. publisherId stays '' until you set
-   * PUBLIC_ADSENSE_PUBLISHER_ID yourself; nothing in this codebase invents
-   * one. `enabled` requires BOTH PUBLIC_ADS_ENABLED="true" AND a non-empty
-   * publisher ID — either alone renders nothing.
+   * Google AdSense (2026-08-31, fallback added 2026-09-01). Preferred source
+   * is always the environment (Cloudflare Pages Production variables, or a
+   * local .env) — see .env.example. If that's genuinely absent, a real
+   * production build (never `astro dev`) falls back to this site's own real
+   * publisher ID rather than shipping a broken "not configured" ads.txt —
+   * see the ADSENSE_FALLBACK_PUBLISHER_ID block above for the full reasoning
+   * on why hardcoding the REAL id here is safe (it is public information,
+   * not a secret). An explicit PUBLIC_ADS_ENABLED="false" always disables,
+   * regardless of the fallback.
    */
   adsense: {
-    enabled:
-      import.meta.env.PUBLIC_ADS_ENABLED === 'true' &&
-      (import.meta.env.PUBLIC_ADSENSE_PUBLISHER_ID ?? '').trim().length > 0,
-    publisherId: (import.meta.env.PUBLIC_ADSENSE_PUBLISHER_ID ?? '').trim(),
+    enabled: _adsenseEnabled,
+    publisherId: _adsensePublisherId,
     mode: (['auto', 'manual', 'both'] as const).includes(
       import.meta.env.PUBLIC_ADSENSE_MODE as 'auto' | 'manual' | 'both',
     )
