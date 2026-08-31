@@ -117,3 +117,22 @@ const imageAlt = ogImageAlt ?? `${SITE.name} — ${SITE.tagline}`;
 {SITE.social.x && <meta name="twitter:site" content={SITE.social.x} />}
 
 <meta name="generator" content={Astro.generator} />
+
+{/*
+  Google AdSense global script. Renders ONLY when both PUBLIC_ADS_ENABLED and
+  a real PUBLIC_ADSENSE_PUBLISHER_ID are set — see SITE.adsense in
+  src/config.ts, which is the single place either is read from. Official
+  async script format per Google's own integration docs; crossorigin is
+  required on this exact tag. This one tag is the prerequisite for BOTH Auto
+  ads (SITE.adsense.mode === 'auto', enabled from the AdSense dashboard —
+  nothing else in this codebase can turn Auto ads on) and manual <AdSlot>
+  units (mode 'manual'/'both') — see README's "Ads" section.
+*/}
+{SITE.adsense.enabled && (
+  <script
+    is:inline
+    async
+    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${SITE.adsense.publisherId}`}
+    crossorigin="anonymous"
+  ></script>
+)}

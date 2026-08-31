@@ -183,6 +183,31 @@ export const SITE = {
   },
 
   /**
+   * Google AdSense (2026-08-31). Every value here is DERIVED from environment
+   * variables, never hardcoded — see .env.example for what each one does and
+   * where to get it. publisherId stays '' until you set
+   * PUBLIC_ADSENSE_PUBLISHER_ID yourself; nothing in this codebase invents
+   * one. `enabled` requires BOTH PUBLIC_ADS_ENABLED="true" AND a non-empty
+   * publisher ID — either alone renders nothing.
+   */
+  adsense: {
+    enabled:
+      import.meta.env.PUBLIC_ADS_ENABLED === 'true' &&
+      (import.meta.env.PUBLIC_ADSENSE_PUBLISHER_ID ?? '').trim().length > 0,
+    publisherId: (import.meta.env.PUBLIC_ADSENSE_PUBLISHER_ID ?? '').trim(),
+    mode: (['auto', 'manual', 'both'] as const).includes(
+      import.meta.env.PUBLIC_ADSENSE_MODE as 'auto' | 'manual' | 'both',
+    )
+      ? (import.meta.env.PUBLIC_ADSENSE_MODE as 'auto' | 'manual' | 'both')
+      : 'auto',
+    slots: {
+      articleTop: (import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_TOP ?? '').trim(),
+      articleMid: (import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE_MID ?? '').trim(),
+      sidebar: (import.meta.env.PUBLIC_ADSENSE_SLOT_SIDEBAR ?? '').trim(),
+    },
+  },
+
+  /**
    * Theme defaults. Both axes are independent and both persist in
    * localStorage; these are only what a first-time visitor gets.
    *   mode:   'system' follows prefers-color-scheme

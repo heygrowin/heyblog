@@ -236,17 +236,45 @@ a self-hosted CMP would go if one is ever needed instead.
 
 Cloudflare Web Analytics is cookieless and is not covered by consent requirements.
 
-## Ads
+## Ads — Google AdSense
 
-`<AdSlot />` renders three positions — after the first section, mid-article, and the
-sidebar/end. **No ad script is integrated.** The slots reserve their exact final height
-whether or not ads are enabled, so wiring a real network in later causes zero
-cumulative layout shift. See the ad section of [`DESIGN.md`](DESIGN.md) for the
-measurements.
+`<AdSlot position="..." />` renders three semantic positions — `article-top`,
+`article-mid`, and `article-end`/`sidebar` (the latter two are the SAME responsive
+right-rail/end-of-article slot — one DOM node repositioned by CSS grid, never two, so
+an ad is never requested twice). The slots reserve their exact final height whether or
+not ads are enabled, so turning ads on causes zero cumulative layout shift. See the ad
+section of [`DESIGN.md`](DESIGN.md) for the CLS measurements.
 
-To integrate a network later: add the loader script in `BaseLayout.astro`, target
-`[data-ad-target]` inside `AdSlot.astro`, and set `PUBLIC_ADS_ENABLED=true`. Check that
-the unit sizes you configure fit the reserved boxes.
+**Nothing renders without real configuration — no publisher ID is hardcoded anywhere
+in this codebase.** Set these in `.env` (local) and in the Cloudflare Pages project's
+own *Environment Variables* (production) — see `.env.example` for the full list and
+where to get each value:
+
+| Variable | What it controls |
+|---|---|
+| `PUBLIC_ADS_ENABLED` | Master switch. Must be `true` for anything below to matter. |
+| `PUBLIC_ADSENSE_PUBLISHER_ID` | Your `pub-XXXXXXXXXXXXXXXX` number. Empty = nothing renders. |
+| `PUBLIC_ADSENSE_MODE` | `auto` (default) \| `manual` \| `both`. |
+| `PUBLIC_ADSENSE_SLOT_ARTICLE_TOP` / `_ARTICLE_MID` / `_SIDEBAR` | Per-unit IDs, manual/both mode only. |
+
+With `PUBLIC_ADS_ENABLED=true` and a real publisher ID: `Head.astro` loads Google's
+official async `adsbygoogle.js` loader (the one script every mode needs). In `auto`
+mode that loader is the entire mechanism — Google's own on-page scanning places ads,
+turned on from the AdSense dashboard's **Ads → Auto ads**, not from this code. In
+`manual`/`both` mode, an `<AdSlot>` with a configured per-slot ID renders a real
+`<ins class="adsbygoogle">` unit; one with no ID configured for its position falls back
+to the inert reserved-space placeholder — it never fakes a slot ID.
+
+`/ads.txt` (`src/pages/ads.txt.ts`) is generated from the same publisher ID —
+`google.com, pub-<ID>, DIRECT, f08c47fec0942fa0`. With no ID configured it serves an
+honest "not configured" message instead of a fake line (a real 404 status in `astro
+dev`/`astro preview`; on the static Cloudflare Pages deploy every prerendered route is
+just a file, so this one still returns 200 with that message — there is no way around
+that on `output: 'static'` hosting, which is why the message matters more than the
+status code once deployed).
+
+Run `node scripts/verify-adsense.mjs` after a build to check the built output actually
+matches the configured state (script present/absent, ads.txt correct, no fake ID).
 
 ## Analytics
 

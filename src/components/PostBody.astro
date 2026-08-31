@@ -13,6 +13,7 @@ const { html } = Astro.props;
    and again mid-article rather than being stacked around the whole body. */
 const chunks = splitForAds(html);
 const slotIds = ['after-first-section', 'mid-article'];
+const positions: Array<'article-top' | 'article-mid'> = ['article-top', 'article-mid'];
 ---
 
 <div class="post-body">
@@ -20,7 +21,11 @@ const slotIds = ['after-first-section', 'mid-article'];
     <>
       <div class="prose" set:html={chunk} />
       {index < chunks.length - 1 && (
-        <AdSlot placement="inline" id={slotIds[index] ?? `inline-${index}`} />
+        <AdSlot
+          placement="inline"
+          position={positions[index]}
+          id={slotIds[index] ?? `inline-${index}`}
+        />
       )}
     </>
   ))}

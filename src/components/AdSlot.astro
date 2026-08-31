@@ -1,16 +1,49 @@
 ---
+import { SITE } from '../config';
+
+type Position = 'article-top' | 'article-mid' | 'article-end' | 'sidebar';
+
 interface Props {
-  /** "inline" sits in the article flow; "sidebar" is the rail / end-of-post slot. */
-  placement: 'inline' | 'sidebar';
-  /** Identifies the position to whatever ad script is wired up later. */
+  /** Legacy prop — still supported so existing call sites need no changes. */
+  placement?: 'inline' | 'sidebar';
+  /**
+   * Semantic position. article-top/article-mid render as the inline slot;
+   * article-end and sidebar both render as the SAME responsive right-rail/
+   * end-of-article slot (one DOM node repositioned by CSS grid, per
+   * DESIGN.md's "Ad slots" section — deliberately not split into two nodes,
+   * which would either double-request an ad or need one hidden, both of
+   * which reintroduce the CLS/double-serve problems that design avoided).
+   */
+  position?: Position;
+  /** Identifies the position to the ad script. Required. */
   id: string;
 }
 
-const { placement, id } = Astro.props;
+const { placement, position, id } = Astro.props;
+
+const resolvedPlacement: 'inline' | 'sidebar' =
+  placement ?? (position === 'sidebar' || position === 'article-end' ? 'sidebar' : 'inline');
 
 /* Off unless explicitly enabled. Inlined at build time by Vite. */
 const adsEnabled = import.meta.env.PUBLIC_ADS_ENABLED === 'true';
 const isDev = import.meta.env.DEV;
+
+/* Manual <ins> units render only in manual/both mode, and only for a
+   position that has a real per-slot ID configured — see .env.example.
+   AUTO mode (the default once ads are enabled) renders NO manual markup at
+   all: the global script in Head.astro is the entire mechanism, and Google's
+   own Auto ads scanning decides where units go. Never both at once for the
+   same position — that is exactly the "flood every article" spec item 14
+   warns against. */
+const manualModeActive = SITE.adsense.enabled && (SITE.adsense.mode === 'manual' || SITE.adsense.mode === 'both');
+const slotIdByPosition: Partial<Record<Position, string>> = {
+  'article-top': SITE.adsense.slots.articleTop,
+  'article-mid': SITE.adsense.slots.articleMid,
+  'article-end': SITE.adsense.slots.sidebar,
+  sidebar: SITE.adsense.slots.sidebar,
+};
+const adSlotId = position ? slotIdByPosition[position] : undefined;
+const renderManualUnit = manualModeActive && !!adSlotId;
 ---
 
 {/*
@@ -18,20 +51,41 @@ const isDev = import.meta.env.DEV;
   --ad-h-sidebar) and applies whether or not ads are enabled. That is the whole
   point: when a real ad script is wired up later it fills space that was already
   occupied, so cumulative layout shift stays at zero.
-
-  No ad script is integrated yet. Enabling PUBLIC_ADS_ENABLED renders an empty
-  labelled container for one to target.
 */}
 <aside
-  class={`ad-slot ad-slot--${placement}`}
+  class={`ad-slot ad-slot--${resolvedPlacement}`}
   data-ad-slot={id}
-  data-ad-placement={placement}
+  data-ad-placement={resolvedPlacement}
   data-dev-outline={!adsEnabled && isDev ? 'true' : 'false'}
   aria-hidden={adsEnabled ? undefined : 'true'}
 >
-  {adsEnabled && <span class="ad-slot__label">Advertisement</span>}
-  {adsEnabled && <div class="ad-slot__frame" data-ad-target={id}></div>}
+  {renderManualUnit && (
+    <>
+      <span class="ad-slot__label">Advertisement</span>
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-client={`ca-pub-${SITE.adsense.publisherId}`}
+        data-ad-slot={adSlotId}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+        data-ad-target={id}
+      />
+      <script is:inline define:vars={{ id }}>
+        (function () {
+          try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+          } catch (e) {
+            /* AdSense not yet loaded or blocked — the reserved space still
+               holds, so this never shifts the page either way. */
+          }
+        })();
+      </script>
+    </>
+  )}
+  {adsEnabled && !renderManualUnit && <span class="ad-slot__label">Advertisement</span>}
+  {adsEnabled && !renderManualUnit && <div class="ad-slot__frame" data-ad-target={id}></div>}
   {!adsEnabled && isDev && (
-    <span class="ad-slot__label">Ad slot · {id} · {placement} · reserved</span>
+    <span class="ad-slot__label">Ad slot · {id} · {resolvedPlacement} · reserved</span>
   )}
 </aside>
