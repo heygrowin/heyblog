@@ -47,8 +47,26 @@ export const postSchema = z
     /** Must be one of the ids in CATEGORIES in src/config.ts. */
     category: z.enum(CATEGORY_IDS),
 
-    /** Kebab-case, up to 8. May be empty, but the key is required. */
-    tags: z.array(z.string().min(1).max(32).regex(KEBAB_CASE, 'tags must be kebab-case')).max(8),
+    /**
+     * Kebab-case, up to 8. May be empty, but the key is required.
+     *
+     * Coerced to string before validation, and only for this reason: an
+     * all-digit tag ("2026") is perfectly valid kebab-case, but unquoted in
+     * YAML it parses as a NUMBER, and a plain z.string() then rejects the
+     * entry with `Expected type "string", received "number"`. Content-schema
+     * validation runs during content sync, before draft filtering, so one
+     * such tag fails the entire production build — including for a post still
+     * marked draft: true.
+     *
+     * This is not a relaxation: KEBAB_CASE is still enforced after coercion,
+     * so "Not A Tag" and "--bad--" still fail the build exactly as before.
+     * The writer quotes tags at source too (trendscout writer/article.py
+     * _render), but coercing here is what keeps already-written posts valid
+     * without rewriting their files.
+     */
+    tags: z
+      .array(z.coerce.string().min(1).max(32).regex(KEBAB_CASE, 'tags must be kebab-case'))
+      .max(8),
 
     /**
      * Public-facing path of the hero image, always "/images/<filename>".

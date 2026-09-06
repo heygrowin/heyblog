@@ -47,24 +47,18 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  /* Safety net (2026-09-01): every element in this stylesheet is already
-     width-constrained (see layout.css's own comments on the exact grid/table
-     overflow bugs it was built to avoid), but Google's AdSense Auto ads
-     script — live on this site as of the last deploy — injects ad units via
-     JavaScript directly into the DOM, outside all of that CSS's reach and
-     outside our control over their markup. That is the standard, documented
-     cause of a NEW horizontal-scroll regression appearing right after
-     turning Auto ads on, and clipping at the root is Google's own
-     recommended mitigation. width: 100vw + overflow-x: hidden here (not on
-     body — see below) contains any such element without touching
-     `position: sticky` on the TOC/ad rails in post-grid, which breaks in
-     Safari specifically when overflow is set on a CLOSE ancestor of the
-     sticky element; html is far enough up the tree to avoid that. */
-  /* 100% not 100vw: vw includes the scrollbar gutter in some browsers,
-     which would itself introduce a few pixels of horizontal overflow —
-     exactly the bug this rule exists to prevent. */
+  /* NO `overflow-x: hidden` here.
+     It used to sit on this rule as an AdSense safety net. It did stop the page
+     scrolling sideways — by CLIPPING whatever overflowed, which is why wide
+     tables looked truncated rather than broken and why successive CSS patches
+     never actually fixed anything: the symptom was hidden, so the cause was
+     never visible. The documented reason for it (Auto-ads injecting oversized
+     units) is already handled where it belongs, on `.ad-slot` in layout.css,
+     which sets max-width:100% + overflow:hidden + contain:layout around
+     anything an ad script injects.
+     Overflow is now a real, measurable failure — scripts/check-responsive.mjs
+     asserts documentElement.scrollWidth <= innerWidth at every mobile width. */
   width: 100%;
-  overflow-x: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -138,8 +132,21 @@ li {
 
 /* A long URL or unbroken token must never widen the page on a phone. */
 p, li, h1, h2, h3, h4, td, th, blockquote, figcaption, .card__title, .post-title {
+  /* overflow-wrap alone: it breaks a word ONLY when that word cannot fit on a
+     line by itself, which is exactly the long-URL case this rule exists for.
+     `word-break: break-word` used to sit here too and was the cause of
+     "Cost-per-compute-unit" rendering as "Cost-per-co / mpute-unit" in table
+     cells — it breaks mid-word even when wrapping at a space was possible. */
   overflow-wrap: break-word;
-  word-break: break-word;
+}
+
+/* Genuinely unbreakable strings — URLs, hashes, long identifiers — where
+   breaking anywhere is better than overflowing. Scoped to inline code and
+   links rather than applied to all prose. */
+.prose a,
+.prose code,
+.prose pre {
+  overflow-wrap: anywhere;
 }
 
 a {

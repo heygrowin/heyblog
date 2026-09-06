@@ -1,6 +1,7 @@
 ---
 import AdSlot from './AdSlot.astro';
 import { splitForAds } from '../lib/split-content';
+import { makeTablesResponsive } from '../lib/responsive-tables';
 
 interface Props {
   /** Rendered post HTML, from entry.rendered.html. */
@@ -9,9 +10,19 @@ interface Props {
 
 const { html } = Astro.props;
 
+/* Every table gets its responsive wrapper, mode and per-cell labels here — at
+   the rendering layer, at build time — so old posts, drafts in review and
+   future TrendScout output are all covered without any Markdown file carrying
+   presentation markup. See src/lib/responsive-tables.ts.
+
+   Runs before the ad split: the split cuts on <h2> boundaries, which this
+   transform never touches, and doing it first means a table can never be
+   bisected by a chunk boundary mid-wrapper. */
+const responsiveHtml = makeTablesResponsive(html);
+
 /* Chunks are cut at <h2> boundaries, so the ads land after the first section
    and again mid-article rather than being stacked around the whole body. */
-const chunks = splitForAds(html);
+const chunks = splitForAds(responsiveHtml);
 const slotIds = ['after-first-section', 'mid-article'];
 const positions: Array<'article-top' | 'article-mid'> = ['article-top', 'article-mid'];
 ---

@@ -562,9 +562,14 @@ a.pill:hover {
 }
 
 /* The three-part grid: TOC rail | article | ad rail.
-   Below 1100px everything stacks in DOM order, which reads correctly. */
+   Below 1100px everything stacks in DOM order, which reads correctly.
+   grid-template-columns is explicit even for this single stacked column: an
+   implicit `auto` track has no upper bound and grows to its widest child's
+   max-content size — here, the longest table-of-contents heading laid out on
+   one line — overflowing the viewport on mobile instead of wrapping. */
 .post-grid {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-xl);
   align-items: start;
 }
@@ -666,6 +671,7 @@ a.pill:hover {
   list-style: none;
   padding: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);   /* see .post-grid: same auto-track overflow risk */
   gap: var(--space-3xs);
 }
 

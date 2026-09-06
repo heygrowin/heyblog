@@ -13,8 +13,17 @@ node_modules/
 # vercel
 .vercel/
 
+# trendscout (separate Python app living inside this repo — its own venv,
+# secrets, sqlite db, logs and reports must never be staged into the blog
+# repo. See trendscout/README.md. A broad `git add` here would otherwise
+# stage trendscout/.env (API keys) and trendscout/data/trendscout.db.
+trendscout/
+
 # os / editor
 .DS_Store
 Thumbs.db
 *.log
 npm-debug.log*
+
+# Local responsive-audit screenshots (scripts/check-responsive.mjs --shots)
+.responsive-shots/
