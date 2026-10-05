@@ -1,0 +1,30 @@
+# blog.heygrow.in has moved to the main domain: https://heygrow.in/blog
+# Every post keeps its slug, so each old URL redirects 1:1 (301 = permanent,
+# which tells Google to transfer the page's ranking to the new address).
+# Cloudflare Pages applies the first matching rule, top to bottom.
+
+# archive pages
+/blog/2   https://heygrow.in/blog?page=2   301
+/blog/3   https://heygrow.in/blog?page=3   301
+/blog/4   https://heygrow.in/blog?page=4   301
+/blog/5   https://heygrow.in/blog?page=5   301
+/blog/6   https://heygrow.in/blog?page=6   301
+/blog/7   https://heygrow.in/blog?page=7   301
+/blog/8   https://heygrow.in/blog?page=8   301
+/blog/9   https://heygrow.in/blog?page=9   301
+/blog/10  https://heygrow.in/blog?page=10  301
+/blog/11  https://heygrow.in/blog?page=11  301
+/blog/12  https://heygrow.in/blog?page=12  301
+
+# posts
+/blog/:slug  https://heygrow.in/blog/:slug  301
+/blog        https://heygrow.in/blog        301
+
+# categories
+/category/ai-tools*         https://heygrow.in/blog?category=AI%20Tools         301
+/category/consumer-tech*    https://heygrow.in/blog?category=Consumer%20Tech    301
+/category/money-and-work*   https://heygrow.in/blog?category=Money%20%26%20Work 301
+/category/creator-economy*  https://heygrow.in/blog?category=Creator%20Economy  301
+
+# everything else (home, about, legal pages, feeds)
+/*  https://heygrow.in/blog  301
